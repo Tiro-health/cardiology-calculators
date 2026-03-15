@@ -1,0 +1,383 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BMI Calculator - Tiro Web SDK</title>
+    <!-- Google Fonts (required for Tiro Web SDK) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Lexend:wght@100..900&family=Fira+Mono:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      * {
+        margin: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Lexend", sans-serif;
+        min-height: 100vh;
+        background: #f0f4f3;
+        color: #1a2e2a;
+        padding: 2.5rem 2rem;
+      }
+
+      /* ---- Header ---- */
+      .page-header {
+        max-width: 1100px;
+        margin: 0 auto 2.5rem;
+        display: flex;
+        align-items: baseline;
+        gap: 1rem;
+      }
+
+      .page-header h1 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        letter-spacing: -0.03em;
+        color: #0d3b30;
+      }
+
+      .page-header p {
+        font-size: 0.82rem;
+        color: #7a9990;
+        font-weight: 400;
+      }
+
+      /* ---- Grid ---- */
+      .grid {
+        display: grid;
+        grid-template-columns: 400px 1fr;
+        gap: 1.5rem;
+        max-width: 1100px;
+        margin: 0 auto;
+        align-items: start;
+      }
+
+      /* ---- Cards ---- */
+      .card {
+        background: #ffffff;
+        border-radius: 0.75rem;
+        padding: 1.75rem;
+        border: 1px solid #dce8e4;
+      }
+
+      .card__title {
+        font-size: 0.7rem;
+        font-weight: 600;
+        color: #7a9990;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        margin-bottom: 1rem;
+      }
+
+      /* ---- Autofill button ---- */
+      tiro-magic-clipboard button[type="submit"] {
+        display: block;
+        width: 100%;
+        margin-top: 1rem;
+        padding: 0.65rem 1.25rem;
+        font-family: "Lexend", sans-serif;
+        font-size: 0.82rem;
+        font-weight: 600;
+        color: #fff;
+        background: #0d3b30;
+        border: none;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        transition: background 0.2s, transform 0.1s;
+      }
+
+      tiro-magic-clipboard button[type="submit"]:hover {
+        background: #155c4a;
+      }
+
+      tiro-magic-clipboard button[type="submit"]:active {
+        transform: scale(0.98);
+      }
+
+      /* ---- BMI result ---- */
+      .bmi-result {
+        margin-top: 1.25rem;
+        background: #f4faf8;
+        border: 1px solid #d0e6dd;
+        border-radius: 0.5rem;
+        padding: 1rem 1.25rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        opacity: 0;
+        transform: translateY(4px);
+        transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+      }
+
+      .bmi-result.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .bmi-result__label {
+        font-size: 0.7rem;
+        font-weight: 600;
+        color: #7a9990;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+      }
+
+      .bmi-result__value {
+        font-family: "Fira Mono", monospace;
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: #0d3b30;
+        line-height: 1;
+      }
+
+      .bmi-result__category {
+        font-size: 0.7rem;
+        font-weight: 600;
+        margin-top: 0.2rem;
+        padding: 0.1rem 0.45rem;
+        border-radius: 999px;
+        display: inline-block;
+      }
+
+      .bmi-result__category.underweight {
+        background: #dbeafe;
+        color: #1e40af;
+      }
+      .bmi-result__category.normal {
+        background: #d1fae5;
+        color: #065f46;
+      }
+      .bmi-result__category.overweight {
+        background: #fef3c7;
+        color: #92400e;
+      }
+      .bmi-result__category.obese {
+        background: #fee2e2;
+        color: #991b1b;
+      }
+
+      .bmi-result__right {
+        text-align: right;
+      }
+
+      /* ---- Footer ---- */
+      footer {
+        max-width: 1100px;
+        margin: 2rem auto 0;
+        text-align: center;
+        font-size: 0.68rem;
+        color: #a3b8b1;
+      }
+
+      footer a {
+        color: #7a9990;
+        text-decoration: none;
+      }
+
+      footer a:hover {
+        text-decoration: underline;
+      }
+
+      /* ---- Responsive ---- */
+      @media (max-width: 860px) {
+        .page-header {
+          flex-direction: column;
+          gap: 0.25rem;
+        }
+        .grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="page-header">
+      <h1>BMI Calculator</h1>
+      <p>Body Mass Index based on weight and height</p>
+    </div>
+
+    <div class="grid">
+      <!-- Left column: Magic Clipboard -->
+      <div class="card">
+        <div class="card__title">Magic Clipboard</div>
+        <tiro-magic-clipboard for="bmi-form">
+          <button type="submit">Autofill form</button>
+        </tiro-magic-clipboard>
+      </div>
+
+      <!-- Right column: BMI Form -->
+      <div class="card">
+        <div class="card__title">Calculator</div>
+        <tiro-form-filler id="bmi-form">
+          <script type="application/fhir+json" slot="questionnaire">
+            {
+              "resourceType": "Questionnaire",
+              "status": "active",
+              "title": "BMI Calculator",
+              "language": "en",
+              "item": [
+                {
+                  "linkId": "weight",
+                  "type": "decimal",
+                  "text": "Weight",
+                  "required": true,
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                      "valueCodeableConcept": {
+                        "text": "textfield",
+                        "coding": [
+                          {
+                            "system": "http://fhir.tiro.health/CodeSystem/tiro-questionnaire-item-control",
+                            "code": "textfield"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-unit",
+                      "valueCoding": {
+                        "system": "http://unitsofmeasure.org",
+                        "code": "kg",
+                        "display": "kg"
+                      }
+                    },
+                    {
+                      "url": "http://hl7.org/fhir/StructureDefinition/entryFormat",
+                      "valueString": "e.g. 72"
+                    }
+                  ]
+                },
+                {
+                  "linkId": "height",
+                  "type": "decimal",
+                  "text": "Height",
+                  "required": true,
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                      "valueCodeableConcept": {
+                        "text": "textfield",
+                        "coding": [
+                          {
+                            "system": "http://fhir.tiro.health/CodeSystem/tiro-questionnaire-item-control",
+                            "code": "textfield"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-unit",
+                      "valueCoding": {
+                        "system": "http://unitsofmeasure.org",
+                        "code": "cm",
+                        "display": "cm"
+                      }
+                    },
+                    {
+                      "url": "http://hl7.org/fhir/StructureDefinition/entryFormat",
+                      "valueString": "e.g. 175"
+                    }
+                  ]
+                },
+                {
+                  "linkId": "bmi",
+                  "type": "decimal",
+                  "text": "BMI",
+                  "readOnly": true,
+                  "extension": [
+                    {
+                      "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-itemControl",
+                      "valueCodeableConcept": {
+                        "text": "textfield",
+                        "coding": [
+                          {
+                            "system": "http://fhir.tiro.health/CodeSystem/tiro-questionnaire-item-control",
+                            "code": "textfield"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "url": "http://hl7.org/fhir/StructureDefinition/questionnaire-unit",
+                      "valueCoding": {
+                        "system": "http://unitsofmeasure.org",
+                        "code": "kg/m2",
+                        "display": "kg/m2"
+                      }
+                    },
+                    {
+                      "url": "http://hl7.org/fhir/uv/sdc/StructureDefinition/sdc-questionnaire-calculatedExpression",
+                      "valueExpression": {
+                        "language": "text/fhirpath",
+                        "expression": "iif(%resource.item.where(linkId='weight').answer.value.exists() and %resource.item.where(linkId='height').answer.value.exists() and %resource.item.where(linkId='height').answer.value > 0, (%resource.item.where(linkId='weight').answer.value / (%resource.item.where(linkId='height').answer.value * 0.01).power(2)).round(1), {})"
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          </script>
+        </tiro-form-filler>
+
+        <div class="bmi-result" id="bmi-result">
+          <div>
+            <div class="bmi-result__label">Your BMI</div>
+          </div>
+          <div class="bmi-result__right">
+            <div class="bmi-result__value" id="bmi-value">--</div>
+            <div class="bmi-result__category" id="bmi-category"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      Powered by <a href="https://sdk.tiro.health/web">Tiro Web SDK</a>
+    </footer>
+
+    <script src="https://cdn.tiro.health/sdk/latest/tiro-web-sdk.iife.js"></script>
+
+    <script>
+      const form = document.getElementById("bmi-form");
+      const resultBanner = document.getElementById("bmi-result");
+      const bmiValueEl = document.getElementById("bmi-value");
+      const bmiCategoryEl = document.getElementById("bmi-category");
+
+      function classifyBmi(bmi) {
+        if (bmi < 18.5) return { label: "Underweight", cls: "underweight" };
+        if (bmi < 25) return { label: "Normal", cls: "normal" };
+        if (bmi < 30) return { label: "Overweight", cls: "overweight" };
+        return { label: "Obese", cls: "obese" };
+      }
+
+      function extractBmi(response) {
+        const bmiItem = response?.item?.find((i) => i.linkId === "bmi");
+        return bmiItem?.answer?.[0]?.valueDecimal ?? null;
+      }
+
+      function updateResult(response) {
+        const bmi = extractBmi(response);
+        if (bmi != null && bmi > 0) {
+          const { label, cls } = classifyBmi(bmi);
+          bmiValueEl.textContent = bmi.toFixed(1);
+          bmiCategoryEl.textContent = label;
+          bmiCategoryEl.className = "bmi-result__category " + cls;
+          resultBanner.classList.add("visible");
+        } else {
+          resultBanner.classList.remove("visible");
+        }
+      }
+
+      form.addEventListener("tiro-update", (e) => {
+        updateResult(e.detail.response);
+      });
+    </script>
+  </body>
+</html>
