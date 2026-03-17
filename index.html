@@ -313,13 +313,22 @@
 
       .result-row {
         display: flex;
-        align-items: baseline;
+        align-items: center;
         justify-content: space-between;
         gap: 1rem;
         padding: 0.4rem 0.625rem;
         background: #f8fafc;
         border-radius: 0.375rem;
         border: 1px solid #edf1f7;
+      }
+
+      .result-row__check {
+        flex-shrink: 0;
+        margin: 0;
+        cursor: pointer;
+        accent-color: #2563eb;
+        width: 13px;
+        height: 13px;
       }
 
       .result-row__label {
@@ -512,8 +521,10 @@
             <div class="template-sel">
               <label for="calc-select">Select calculator</label>
               <select id="calc-select">
+                <option value="tri">TRI Score</option>
+                <option value="hasbled">HAS-BLED Score</option>
+                <option value="euroscore2">EuroSCORE II</option>
                 <option value="chadsvasc">CHA&#x2082;DS&#x2082;-VASc Score</option>
-                <option value="rarp">RARP Operative Report</option>
               </select>
             </div>
           </div>
@@ -558,14 +569,28 @@
     <script>
       const CALCULATORS = [
         {
-          id: 'chadsvasc',
-          label: 'CHA\u2082DS\u2082-VASc Score',
-          url: 'http://templates.tiro.health/templates/23030f2f048445af9ab171a7e4222699'
+          id: 'tri',
+          label: 'TRI Score',
+          url: 'http://templates.tiro.health/templates/718620a797d84dd58bd2c92d395e0e90',
+          resultCount: 3
         },
         {
-          id: 'rarp',
-          label: 'RARP Operative Report',
-          url: 'http://templates.tiro.health/templates/11bc9b87d0744edb843ca6250ce24494'
+          id: 'hasbled',
+          label: 'HAS-BLED Score',
+          url: 'http://templates.tiro.health/templates/71a49276146c4492a9053bfb296d0d17',
+          resultCount: 5
+        },
+        {
+          id: 'euroscore2',
+          label: 'EuroSCORE II',
+          url: 'http://templates.tiro.health/templates/3171b88fff9a4b61af84fe354a26b48b',
+          resultCount: 3
+        },
+        {
+          id: 'chadsvasc',
+          label: 'CHA\u2082DS\u2082-VASc Score',
+          url: 'http://templates.tiro.health/templates/9f1f296ba5ae415f97c8e71464c402df',
+          resultCount: 1
         }
       ];
 
@@ -576,6 +601,7 @@
       const resultItems = document.getElementById('result-items');
       const copyBtn     = document.getElementById('copy-btn');
 
+      
       // ---- Footer year ----
       document.getElementById('footer-year').textContent = new Date().getFullYear();
 
@@ -627,17 +653,33 @@
 
       function renderResults(response) {
         const answers = collectAnswers(response?.item);
-        const score = answers.length ? [answers[answers.length - 1]] : [];
-        if (!score.length) {
+        if (!answers.length) {
           resultPanel.classList.remove('visible');
           return;
         }
-        resultItems.innerHTML = score.map(({ label, value }) => `
-          <div class="result-row">
-            <span class="result-row__label">${escHtml(label)}</span>
-            <span class="result-row__value">${escHtml(value)}</span>
-          </div>
-        `).join('');
+
+        const existingRows = Array.from(resultItems.querySelectorAll('.result-row'));
+        const existingLabels = existingRows.map(r => r.querySelector('.result-row__label')?.textContent?.trim());
+        const newLabels = answers.map(a => a.label);
+        const labelsMatch = existingLabels.length === newLabels.length &&
+          newLabels.every((l, i) => l === existingLabels[i]);
+
+        if (labelsMatch) {
+          // Only update values — never touch the checkboxes
+          existingRows.forEach((row, i) => {
+            row.querySelector('.result-row__value').textContent = answers[i].value;
+          });
+        } else {
+          const calc = CALCULATORS.find(c => c.id === calcSelect.value);
+          const resultStart = Math.max(0, answers.length - (calc?.resultCount ?? 1));
+          resultItems.innerHTML = answers.map(({ label, value }, i) => `
+            <div class="result-row">
+              <input type="checkbox" class="result-row__check"${i >= resultStart ? ' checked' : ''}>
+              <span class="result-row__label">${escHtml(label)}</span>
+              <span class="result-row__value">${escHtml(value)}</span>
+            </div>`).join('');
+        }
+
         resultPanel.classList.add('visible');
       }
 
@@ -651,10 +693,12 @@
         const calcLabel = CALCULATORS.find(c => c.id === calcSelect.value)?.label || 'Results';
         const lines = [calcLabel, ''];
         rows.forEach(row => {
+          if (!row.querySelector('.result-row__check')?.checked) return;
           const lbl = row.querySelector('.result-row__label')?.textContent?.trim() || '';
           const val = row.querySelector('.result-row__value')?.textContent?.trim() || '';
           lines.push(`${lbl}: ${val}`);
         });
+        if (lines.length <= 2) return;
 
         navigator.clipboard.writeText(lines.join('\n')).then(() => {
           const originalHTML = copyBtn.innerHTML;
