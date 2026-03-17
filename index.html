@@ -455,8 +455,33 @@
           gap: 0.5rem;
         }
 
-        .template-sel select {
+        .card__body {
+          padding: 0.875rem;
+        }
+
+        .template-sel {
           width: 100%;
+        }
+
+        .template-sel select {
+          flex: 1;
+          width: 100%;
+        }
+
+        .result-row {
+          gap: 0.5rem;
+        }
+
+        /* Prevent tooltip overflowing left edge */
+        .info-tip__bubble {
+          left: 0;
+          transform: none;
+          max-width: calc(100vw - 3rem);
+        }
+
+        .info-tip__bubble::after {
+          left: 1rem;
+          transform: none;
         }
       }
     </style>
