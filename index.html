@@ -16,6 +16,22 @@
       /* ============================================================
          Reset + base
       ============================================================ */
+      :root {
+        --bg-page: #eef3f8;
+        --bg-page-alt: #e7eef7;
+        --text-main: #0f172a;
+        --text-muted: #64748b;
+        --border-soft: #d7e1ec;
+        --surface: #ffffff;
+        --surface-muted: #f8fbff;
+        --brand: #2563eb;
+        --brand-strong: #1e4fc7;
+        --ok: #15803d;
+        --warn: #c2410c;
+        --radius-lg: 14px;
+        --radius-md: 10px;
+      }
+
       *, *::before, *::after {
         margin: 0;
         box-sizing: border-box;
@@ -23,11 +39,13 @@
 
       body {
         font-family: "Open Sans", sans-serif;
-        font-size: 14px;
+        font-size: 15px;
         line-height: 1.5;
         min-height: 100vh;
-        background: #e8ecf2;
-        color: #1e293b;
+        background:
+          radial-gradient(1000px 420px at -12% -8%, #dbeafe 0%, rgba(219,234,254,0) 70%),
+          linear-gradient(180deg, var(--bg-page-alt), var(--bg-page));
+        color: var(--text-main);
         display: flex;
         flex-direction: column;
         overflow-x: hidden;
@@ -41,7 +59,7 @@
       }
 
       tiro-magic-clipboard {
-        min-height: 320px;
+        display: block;
       }
 
       .tiro-content-editable-container {
@@ -65,14 +83,15 @@
         position: sticky;
         top: 0;
         z-index: 50;
-        height: 56px;
-        background: #0d2137;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+        height: 62px;
+        background: linear-gradient(90deg, #0b2036 0%, #0f2d49 100%);
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
         display: flex;
         align-items: center;
-        padding: 0 1.5rem;
-        gap: 0.875rem;
+        padding: 0 1.65rem;
+        gap: 1rem;
         flex-shrink: 0;
+        box-shadow: 0 8px 20px rgba(15, 23, 42, 0.25);
       }
 
       .header__logo img {
@@ -90,10 +109,10 @@
       }
 
       .header__name {
-        font-size: 0.9375rem;
-        font-weight: 700;
+        font-size: 0.98rem;
+        font-weight: 800;
         color: #ffffff;
-        letter-spacing: 0.01em;
+        letter-spacing: 0.02em;
       }
 
       .header__lang {
@@ -136,15 +155,15 @@
          Disclaimer banner
       ============================================================ */
       .banner {
-        background: #fefce8;
-        border-bottom: 1px solid #fde68a;
-        padding: 0.5rem 1.5rem;
+        background: #fffbeb;
+        border-bottom: 1px solid #fcd48f;
+        padding: 0.58rem 1.65rem;
         display: flex;
         align-items: flex-start;
-        gap: 0.625rem;
-        font-size: 0.75rem;
+        gap: 0.72rem;
+        font-size: 0.76rem;
         color: #78350f;
-        line-height: 1.55;
+        line-height: 1.52;
         flex-shrink: 0;
       }
 
@@ -186,17 +205,40 @@
       ============================================================ */
       .main {
         flex: 1;
-        padding: 1.75rem 1.5rem 1rem;
+        padding: 1.6rem 1.6rem 1rem;
       }
+
+      .main__intro {
+        max-width: 1280px;
+        margin: 0 auto 1rem;
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 1rem;
+      }
+
+      .main__title {
+        font-size: 1.28rem;
+        font-weight: 800;
+        letter-spacing: -0.015em;
+        color: #0b1f34;
+      }
+
+      .main__subtitle {
+        margin-top: 0.2rem;
+        font-size: 0.82rem;
+        color: var(--text-muted);
+      }
+
 
       /* ============================================================
          Two-column grid
       ============================================================ */
       .layout {
         display: grid;
-        grid-template-columns: 440px 1fr;
-        gap: 1.25rem;
-        max-width: 1200px;
+        grid-template-columns: minmax(360px, 0.95fr) minmax(460px, 1.05fr);
+        gap: 1.4rem;
+        max-width: 1280px;
         margin: 0 auto;
         align-items: start;
       }
@@ -205,10 +247,15 @@
          Cards
       ============================================================ */
       .card {
-        background: #ffffff;
-        border-radius: 0.625rem;
-        border: 1px solid #dde3ec;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.07), 0 1px 2px rgba(0, 0, 0, 0.04);
+        background: var(--surface);
+        border-radius: var(--radius-lg);
+        border: 1px solid var(--border-soft);
+        box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06), 0 2px 6px rgba(15, 23, 42, 0.04);
+        transition: box-shadow 0.2s ease;
+      }
+
+      .card:hover {
+        box-shadow: 0 14px 28px rgba(15, 23, 42, 0.08), 0 3px 8px rgba(15, 23, 42, 0.05);
       }
 
       /* Tinted header bar inside each card */
@@ -216,89 +263,159 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        min-height: 44px;
-        padding: 0.5rem 1.25rem;
-        background: #f8fafc;
-        border-bottom: 1px solid #edf1f7;
-        border-radius: 0.625rem 0.625rem 0 0;
+        min-height: 52px;
+        padding: 0.55rem 1.2rem;
+        background: var(--surface-muted);
+        border-bottom: 1px solid #e6edf5;
+        border-radius: var(--radius-lg) var(--radius-lg) 0 0;
       }
 
       .layout__left {
         display: flex;
         flex-direction: column;
-        gap: 1.25rem;
+        gap: 1.2rem;
         position: sticky;
-        top: calc(56px + 1.25rem);
+        top: calc(62px + 1.1rem);
       }
 
-      /* ============================================================
-         CTA card
-      ============================================================ */
-      .card--cta {
-        background: linear-gradient(135deg, #0d2137 0%, #1a3a5c 100%);
-        border-color: transparent;
-        padding: 1.5rem 1.25rem;
+      .layout__right {
         display: flex;
         flex-direction: column;
         gap: 1rem;
       }
 
-      .cta__eyebrow {
-        font-size: 0.6rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.12em;
-        color: #7dd3fc;
-      }
-
-      .cta__title {
-        font-size: 1rem;
-        font-weight: 700;
-        color: #f8fafc;
-        line-height: 1.35;
-        margin-top: 0.1rem;
-      }
-
-      .cta__desc {
-        font-size: 0.775rem;
-        color: #94a3b8;
-        line-height: 1.55;
-      }
-
-      .cta__btn {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.4rem;
-        align-self: flex-start;
-        margin-top: 0.25rem;
-        padding: 0.55rem 1.1rem;
+      /* ============================================================
+         Autofill button
+      ============================================================ */
+      tiro-magic-clipboard-button {
+        display: block;
+        width: 100%;
+        margin-top: 0.875rem;
+        padding: 0.75rem 1.25rem;
         font-family: "Open Sans", sans-serif;
-        font-size: 0.8rem;
+        font-size: 0.9rem;
         font-weight: 700;
-        color: #0d2137;
-        background: #7dd3fc;
+        color: #ffffff;
+        background: #2563eb;
         border: none;
-        border-radius: 0.4rem;
-        text-decoration: none;
+        border-radius: 0.5rem;
         cursor: pointer;
-        transition: background 0.2s;
+        transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
+        letter-spacing: 0.01em;
+        text-align: center;
+        box-shadow: 0 2px 8px rgba(37,99,235,0.35);
       }
 
-      .cta__btn:hover {
-        background: #bae6fd;
+      tiro-magic-clipboard-button:hover {
+        background: #1d4ed8;
+        box-shadow: 0 4px 12px rgba(37,99,235,0.45);
+      }
+
+      tiro-magic-clipboard-button:active {
+        transform: scale(0.98);
+      }
+
+      tiro-magic-clipboard-button[data-state="pending"] {
+        background: #2563eb;
+        cursor: wait;
+        opacity: 0.75;
+      }
+
+      tiro-magic-clipboard-button[data-state="pending"]::before {
+        content: "";
+        display: inline-block;
+        width: 0.85em;
+        height: 0.85em;
+        margin-right: 0.5em;
+        border: 2px solid rgba(255, 255, 255, 0.35);
+        border-top-color: #fff;
+        border-radius: 50%;
+        vertical-align: -0.1em;
+        animation: mc-spin 0.6s linear infinite;
+      }
+
+      @keyframes mc-spin {
+        to { transform: rotate(360deg); }
+      }
+
+      tiro-magic-clipboard-button[data-state="success"] {
+        background: #16a34a;
+        cursor: default;
+      }
+
+      tiro-magic-clipboard-button[data-state="success"]::before {
+        content: "\2713";
+        margin-right: 0.4em;
+      }
+
+      tiro-magic-clipboard-button[data-state="error"] {
+        background: #dc2626;
+        cursor: default;
+      }
+
+      .autofill-actions {
+        margin-top: 0.65rem;
+        display: flex;
+        justify-content: flex-end;
+      }
+
+      .autofill-clear {
+        background: transparent;
+        border: none;
+        color: #64748b;
+        font-size: 0.75rem;
+        font-family: "Open Sans", sans-serif;
+        font-weight: 700;
+        letter-spacing: 0.01em;
+        cursor: pointer;
+        padding: 0.2rem 0.3rem;
+        border-radius: 0.3rem;
+        transition: color 0.15s, background 0.15s;
+      }
+
+      .autofill-clear:hover {
+        color: #1e293b;
+        background: #f1f5f9;
+      }
+
+      .autofill-meta {
+        margin-top: 0.4rem;
+        min-height: 0;
+        font-size: 0.72rem;
+        font-weight: 600;
+        color: #475569;
+        line-height: 1.4;
+      }
+
+      .autofill-meta--error {
+        color: #b91c1c;
       }
 
       .card__bar-label {
-        font-size: 0.625rem;
+        font-size: 0.67rem;
         font-weight: 700;
-        color: #94a3b8;
+        color: #5b6d82;
         text-transform: uppercase;
         letter-spacing: 0.1em;
       }
 
+      .card__step {
+        display: inline-flex;
+        align-items: center;
+        padding: 0.2rem 0.52rem;
+        border-radius: 999px;
+        background: #e9f1ff;
+        color: #2858b8;
+        font-size: 0.64rem;
+        font-weight: 800;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+        margin-right: 0.5rem;
+      }
+
       /* Card body padding */
       .card__body {
-        padding: 1.25rem;
+        padding: 1.3rem;
       }
 
       /* ============================================================
@@ -311,11 +428,11 @@
       }
 
       .template-sel label {
-        font-size: 0.6rem;
+        font-size: 0.64rem;
         font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 0.08em;
-        color: #94a3b8;
+        color: #5b6d82;
         white-space: nowrap;
       }
 
@@ -326,13 +443,13 @@
 
       .combobox__input {
         width: 100%;
-        height: 28px;
-        padding: 0 1.75rem 0 0.5rem;
-        border: 1px solid #e2e8f0;
-        border-radius: 0.375rem;
+        height: 34px;
+        padding: 0 1.9rem 0 0.65rem;
+        border: 1px solid #d6e1ee;
+        border-radius: 0.5rem;
         background: #ffffff;
         color: #1e293b;
-        font-size: 0.78rem;
+        font-size: 0.8rem;
         font-family: "Open Sans", sans-serif;
         outline: none;
         transition: border-color 0.15s, box-shadow 0.15s;
@@ -348,8 +465,8 @@
         position: absolute;
         right: 0;
         top: 0;
-        height: 28px;
-        width: 26px;
+        height: 34px;
+        width: 30px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -511,89 +628,56 @@
       }
 
       /* ============================================================
-         Autofill button
+         Missing-fields badge (shown in left card bar after autofill)
       ============================================================ */
-      tiro-magic-clipboard-button {
-        display: block;
-        width: 100%;
-        margin-top: 0.875rem;
-        padding: 0.55rem 1rem;
-        font-family: "Open Sans", sans-serif;
-        font-size: 0.8rem;
+      .missing-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+        padding: 0.15rem 0.55rem;
+        background: #fff7ed;
+        border: 1px solid #fed7aa;
+        color: #c2410c;
+        border-radius: 999px;
+        font-size: 0.65rem;
         font-weight: 700;
-        color: #ffffff;
-        background: #2563eb;
-        border: none;
-        border-radius: 0.4rem;
-        cursor: pointer;
-        transition: background 0.2s, color 0.2s, transform 0.1s;
         letter-spacing: 0.01em;
-        text-align: center;
+        margin-left: auto;
       }
 
-      tiro-magic-clipboard-button:hover {
-        background: #1d4ed8;
-      }
-
-      tiro-magic-clipboard-button:active {
-        transform: scale(0.98);
-      }
-
-      tiro-magic-clipboard-button[data-state="pending"] {
-        background: #2563eb;
-        cursor: wait;
-        opacity: 0.75;
-      }
-
-      tiro-magic-clipboard-button[data-state="pending"]::before {
-        content: "";
-        display: inline-block;
-        width: 0.85em;
-        height: 0.85em;
-        margin-right: 0.5em;
-        border: 2px solid rgba(255, 255, 255, 0.35);
-        border-top-color: #fff;
-        border-radius: 50%;
-        vertical-align: -0.1em;
-        animation: mc-spin 0.6s linear infinite;
-      }
-
-      @keyframes mc-spin {
-        to { transform: rotate(360deg); }
-      }
-
-      tiro-magic-clipboard-button[data-state="success"] {
-        background: #7dd3fc;
-        color: #0d2137;
-        cursor: default;
-      }
-
-      tiro-magic-clipboard-button[data-state="success"]::before {
-        content: "\2713";
-        margin-right: 0.4em;
-      }
-
-      tiro-magic-clipboard-button[data-state="error"] {
-        background: #dc2626;
-        cursor: default;
+      .missing-badge--done {
+        background: #f0fdf4;
+        border-color: #bbf7d0;
+        color: #15803d;
       }
 
       /* ============================================================
          Result panel
       ============================================================ */
       .results {
-        border-top: 1px solid #edf1f7;
-        padding: 0.875rem 1.25rem 1.25rem;
-        opacity: 0;
+        opacity: 0.58;
         transform: translateY(4px);
         transition: opacity 0.25s ease, transform 0.25s ease;
-        pointer-events: none;
+      }
+
+      .card--results .card__bar {
+        border-bottom-color: #dbe6f2;
+      }
+
+      .card--results .card__body {
+        padding-top: 1rem;
       }
 
       .results.visible {
         opacity: 1;
         transform: translateY(0);
-        pointer-events: auto;
+      }
+
+      .results:not(.visible) .results__copy {
+        opacity: 0.45;
+        filter: grayscale(0.15);
+        pointer-events: none;
+        animation: none;
       }
 
       .results__header {
@@ -604,39 +688,76 @@
       }
 
       .results__label {
-        font-size: 0.625rem;
+        font-size: 0.66rem;
         font-weight: 700;
-        color: #94a3b8;
+        color: #5b6d82;
         text-transform: uppercase;
         letter-spacing: 0.1em;
+      }
+
+      .results__hint {
+        font-size: 0.78rem;
+        color: #64748b;
+        margin-bottom: 0.65rem;
+      }
+
+      .results__hint--ready {
+        display: none;
+      }
+
+      .results.visible .results__hint--pending {
+        display: none;
+      }
+
+      .results.visible .results__hint--ready {
+        display: block;
       }
 
       .results__copy {
         display: inline-flex;
         align-items: center;
-        gap: 0.3rem;
-        padding: 0.2rem 0.55rem;
-        font-size: 0.7rem;
+        justify-content: center;
+        gap: 0.4rem;
+        padding: 0.45rem 0.9rem;
+        min-width: 180px;
+        font-size: 0.74rem;
         font-family: "Open Sans", sans-serif;
-        font-weight: 600;
-        color: #64748b;
-        background: #f8fafc;
-        border: 1px solid #e2e8f0;
-        border-radius: 0.3rem;
+        font-weight: 800;
+        letter-spacing: 0.02em;
+        color: #ffffff;
+        background: linear-gradient(135deg, #2563eb, #1d4ed8);
+        border: 1px solid #1e40af;
+        border-radius: 0.45rem;
         cursor: pointer;
-        transition: all 0.15s;
+        box-shadow: 0 6px 18px rgba(37, 99, 235, 0.35);
+        transition: transform 0.15s, box-shadow 0.15s, filter 0.15s;
       }
 
       .results__copy:hover {
-        background: #f1f5f9;
-        color: #334155;
-        border-color: #cbd5e1;
+        transform: translateY(-1px);
+        box-shadow: 0 10px 22px rgba(37, 99, 235, 0.45);
+        filter: brightness(1.03);
+      }
+
+      .results__copy:active {
+        transform: translateY(0);
+      }
+
+      .results__copy--attention {
+        animation: copy-pulse 1.9s ease-in-out infinite;
+      }
+
+      @keyframes copy-pulse {
+        0%   { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.45), 0 6px 18px rgba(37, 99, 235, 0.35); }
+        65%  { box-shadow: 0 0 0 9px rgba(37, 99, 235, 0), 0 6px 18px rgba(37, 99, 235, 0.35); }
+        100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0), 0 6px 18px rgba(37, 99, 235, 0.35); }
       }
 
       .results__copy.copied {
-        color: #15803d;
-        border-color: #bbf7d0;
-        background: #f0fdf4;
+        color: #ffffff;
+        border-color: #15803d;
+        background: linear-gradient(135deg, #16a34a, #15803d);
+        box-shadow: 0 8px 20px rgba(21, 128, 61, 0.4);
       }
 
       .results__copy svg {
@@ -654,7 +775,7 @@
         align-items: center;
         justify-content: space-between;
         gap: 1rem;
-        padding: 0.4rem 0.625rem;
+        padding: 0.46rem 0.7rem;
         background: #f8fafc;
         border-radius: 0.375rem;
         border: 1px solid #edf1f7;
@@ -750,7 +871,7 @@
          Footer
       ============================================================ */
       .footer {
-        padding: 1.75rem 1.5rem 2rem;
+        padding: 1.6rem 1.5rem 2rem;
         text-align: center;
         font-family: "Open Sans", sans-serif;
         font-size: 0.625rem;
@@ -783,6 +904,17 @@
           padding: 1rem;
         }
 
+        .main__intro {
+          margin-bottom: 0.8rem;
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 0.25rem;
+        }
+
+        .main__title {
+          font-size: 1.08rem;
+        }
+
         .layout {
           grid-template-columns: 1fr;
         }
@@ -791,9 +923,8 @@
           position: static;
         }
 
-        .cta__btn {
-          align-self: stretch;
-          justify-content: center;
+        .layout__right {
+          gap: 0.9rem;
         }
 
         .card__bar {
@@ -871,6 +1002,12 @@
 
     <!-- ===== Main ===== -->
     <main class="main">
+      <div class="main__intro">
+        <div>
+          <h1 class="main__title" data-i18n="mainTitle">Clinical Calculators</h1>
+          <p class="main__subtitle" data-i18n="mainSubtitle">Paste once, review quickly, and copy structured results with confidence.</p>
+        </div>
+      </div>
       <div class="layout">
 
         <!-- Left column: Magic Clipboard + CTA -->
@@ -879,76 +1016,67 @@
           <div class="card">
             <div class="card__bar">
               <span class="card__bar-label">
-                <span data-i18n="magicLabel">Magic Clipboard</span>
-                <span class="info-tip">
-                  <svg class="info-tip__icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <line x1="12" y1="8" x2="12" y2="8.5"></line>
-                    <line x1="12" y1="11" x2="12" y2="16"></line>
-                  </svg>
-                  <span class="info-tip__bubble" role="tooltip" data-i18n="magicTooltip">
-                    Paste any free-text clinical report here. The Magic Clipboard will read it and automatically fill in the matching fields in the calculator.
-                  </span>
-                </span>
+                <span class="card__step" data-i18n="workflowInput">Step 1</span>
+                <span data-i18n="autofillLabel">Klinisch verslag</span>
               </span>
+              <span class="missing-badge" id="missing-badge" style="display:none" aria-live="polite"></span>
             </div>
             <div class="card__body">
-              <tiro-magic-clipboard for="calculator-form" hide-toolbar placeholder="Paste your clinical report here...">
-                <tiro-magic-clipboard-button data-i18n="magicBtn">Autofill calculator</tiro-magic-clipboard-button>
+              <tiro-magic-clipboard for="calculator-form" hide-toolbar data-i18n-placeholder="autofillPlaceholder" placeholder="Plak hier uw verslag en extraheer automatisch data voor de berekening">
+                <tiro-magic-clipboard-button data-i18n="autofillBtn">Verslag verwerken</tiro-magic-clipboard-button>
               </tiro-magic-clipboard>
+              <div class="autofill-actions">
+                <button type="button" class="autofill-clear" id="autofill-clear-btn" data-i18n="autofillClear">Wissen</button>
+              </div>
+              <p class="autofill-meta" id="autofill-meta" aria-live="polite"></p>
             </div>
-          </div>
-
-          <!-- CTA card -->
-          <div class="card card--cta">
-            <p class="cta__eyebrow" data-i18n="ctaEyebrow">Tiro.health</p>
-            <p class="cta__title" data-i18n="ctaTitle">Bring AI-assisted documentation to your clinic</p>
-            <p class="cta__desc" data-i18n="ctaDesc">Autofill any form from free-text clinical notes! Trusted by clinicians across Belgium and beyond.</p>
-            <a class="cta__btn" href="https://tiro.health" target="_blank" rel="noopener">
-              <span data-i18n="ctaBtn">Start using Tiro.health today</span>
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-            </a>
           </div>
 
         </div><!-- /layout__left -->
 
-        <!-- Right card: Form + Results -->
-        <div class="card">
-          <div class="card__bar">
-            <div class="template-sel">
-              <label for="calc-combobox" data-i18n="calcLabel">Calculator</label>
-              <div class="combobox">
-                <input
-                  class="combobox__input"
-                  id="calc-combobox"
-                  type="text"
-                  role="combobox"
-                  aria-autocomplete="list"
-                  aria-expanded="false"
-                  aria-controls="calc-combobox-list"
-                  aria-haspopup="listbox"
-                  autocomplete="off"
-                  spellcheck="false"
-                >
-                <button type="button" class="combobox__toggle" id="calc-combobox-toggle" tabindex="-1" aria-hidden="true">
-                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-                </button>
-                <ul class="combobox__list" id="calc-combobox-list" role="listbox"></ul>
+        <!-- Right column: Step 2 + Step 3 -->
+        <div class="layout__right">
+          <div class="card">
+            <div class="card__bar">
+              <div class="template-sel">
+                <span class="card__step" data-i18n="workflowReview">Step 2</span>
+                <label for="calc-combobox" data-i18n="calcLabel">Calculator</label>
+                <div class="combobox">
+                  <input
+                    class="combobox__input"
+                    id="calc-combobox"
+                    type="text"
+                    role="combobox"
+                    aria-autocomplete="list"
+                    aria-expanded="false"
+                    aria-controls="calc-combobox-list"
+                    aria-haspopup="listbox"
+                    autocomplete="off"
+                    spellcheck="false"
+                  >
+                  <button type="button" class="combobox__toggle" id="calc-combobox-toggle" tabindex="-1" aria-hidden="true">
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+                  </button>
+                  <ul class="combobox__list" id="calc-combobox-list" role="listbox"></ul>
+                </div>
               </div>
             </div>
-          </div>
-          <div class="card__body">
-            <tiro-form-filler
-              id="calculator-form"
-              sdc-endpoint-address="https://sdc-staging.tiro.health/fhir/r5"
-              compact-grouping
-            ></tiro-form-filler>
+            <div class="card__body">
+              <tiro-form-filler
+                id="calculator-form"
+                sdc-endpoint-address="https://sdc-staging.tiro.health/fhir/r5"
+                compact-grouping
+              ></tiro-form-filler>
+            </div>
           </div>
 
-          <!-- Result panel (fades in on tiro-update) -->
-          <div class="results" id="result-panel">
-            <div class="results__header">
-              <span class="results__label" data-i18n="resultsLabel">Results</span>
+          <!-- Step 3: Copy results -->
+          <div class="card card--results results" id="result-panel">
+            <div class="card__bar">
+              <span class="card__bar-label">
+                <span class="card__step" data-i18n="workflowCopy">Step 3</span>
+                <span data-i18n="resultsLabel">Results</span>
+              </span>
               <button class="results__copy" id="copy-btn" type="button">
                 <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
@@ -957,7 +1085,11 @@
                 <span data-i18n-text>Copy</span>
               </button>
             </div>
-            <div class="result-list" id="result-items"></div>
+            <div class="card__body">
+              <p class="results__hint results__hint--pending" data-i18n="resultsHintPending">Complete Step 2 to unlock copy to clipboard.</p>
+              <p class="results__hint results__hint--ready" data-i18n="resultsHintReady">Review the selected rows, then copy to clipboard.</p>
+              <div class="result-list" id="result-items"></div>
+            </div>
           </div>
         </div>
 
@@ -990,19 +1122,28 @@
     <script>
       const TRANSLATIONS = {
         en: {
+          mainTitle:         'Clinical Calculators',
+          mainSubtitle:      'Paste once, review quickly, and copy structured results with confidence.',
+          workflowInput:     'Step 1',
+          workflowReview:    'Step 2',
+          workflowCopy:      'Step 3',
+          resultsHintPending:'Complete Step 2 to unlock copy to clipboard.',
+          resultsHintReady:  'Review the selected rows, then copy to clipboard.',
           bannerBold:        'For informational purposes only.',
           bannerBody:        'Scores and results are intended to support professional judgment, not replace it. Always verify against current guidelines and the patient\'s clinical context. This is not a substitute for qualified medical advice, diagnosis, or treatment.',
           bannerDismiss:     'Dismiss',
-          magicLabel:        'Magic Clipboard',
-          magicTooltip:      'Paste any free-text clinical report here. The Magic Clipboard will read it and automatically fill in the matching fields in the calculator.',
-          magicBtn:          'Autofill calculator',
-          ctaEyebrow:        'Tiro.health',
-          ctaTitle:          'Bring AI-assisted documentation to your clinic',
-          ctaDesc:           'Autofill any form from free-text clinical notes! Trusted by clinicians across Belgium and beyond.',
-          ctaBtn:            'Start using Tiro.health today',
+          autofillLabel:       'Clinical Report',
+          autofillPlaceholder: 'Paste the patient\'s clinical report here...',
+          autofillClear:       'Clear',
+          autofillError:       'Auto-fill could not process the report. Please fill in the fields manually.',
+          autofillProcessing:  'Processing report...',
+          autofillBadge:       (x, y) => `${x} of ${y} fields filled`,
+          autofillBtn:         'Process report',
+          missingCount:        (n) => n === 1 ? `${n} field missing` : `${n} fields missing`,
+          allFieldsDone:       'All fields filled ✓',
           calcLabel:         'Calculator',
           resultsLabel:      'Results',
-          copyBtn:           'Copy',
+          copyBtn:           'Copy Results',
           copiedBtn:         'Copied!',
           poweredBy:         'Powered by',
           searchPlaceholder: 'Search calculators\u2026',
@@ -1020,19 +1161,28 @@
           },
         },
         nl: {
+          mainTitle:         'Klinische calculators',
+          mainSubtitle:      'Plak één keer, controleer snel en kopieer met vertrouwen gestructureerde resultaten.',
+          workflowInput:     'Stap 1',
+          workflowReview:    'Stap 2',
+          workflowCopy:      'Stap 3',
+          resultsHintPending:'Rond stap 2 af om kopiëren naar het klembord te activeren.',
+          resultsHintReady:  'Controleer de geselecteerde rijen en kopieer vervolgens naar het klembord.',
           bannerBold:        'Enkel ter informatie.',
           bannerBody:        'Scores en resultaten zijn bedoeld ter ondersteuning van klinisch oordeel, niet ter vervanging ervan. Verifieer altijd aan de hand van actuele richtlijnen en de klinische context van de patiënt. Dit is geen vervanging voor gekwalificeerd medisch advies, diagnose of behandeling.',
           bannerDismiss:     'Sluiten',
-          magicLabel:        'Magic Clipboard',
-          magicTooltip:      'Plak hier een vrije-tekst klinisch verslag. De Magic Clipboard leest het en vult automatisch de overeenkomende velden in de calculator in.',
-          magicBtn:          'Calculator automatisch invullen',
-          ctaEyebrow:        'Tiro.health',
-          ctaTitle:          'Breng AI-ondersteunde documentatie naar uw kliniek',
-          ctaDesc:           'Vul elk formulier automatisch in vanuit vrije-tekst klinische notities! Vertrouwd door clinici in België en daarbuiten.',
-          ctaBtn:            'Begin vandaag met Tiro.health',
+          autofillLabel:       'Klinisch verslag',
+          autofillPlaceholder: 'Plak hier uw verslag en extraheer automatisch data voor de berekening',
+          autofillClear:       'Wissen',
+          autofillError:       'Auto-fill kon het verslag niet verwerken. Vul de velden manueel in.',
+          autofillProcessing:  'Verslag verwerken...',
+          autofillBadge:       (x, y) => `${x} van ${y} velden ingevuld`,
+          autofillBtn:         'Verslag verwerken',
+          missingCount:        (n) => n === 1 ? `${n} veld ontbreekt` : `${n} velden ontbreken`,
+          allFieldsDone:       'Alle velden ingevuld ✓',
           calcLabel:         'Calculator',
           resultsLabel:      'Resultaten',
-          copyBtn:           'Kopi\u00ebren',
+          copyBtn:           'Resultaten kopi\u00ebren',
           copiedBtn:         'Gekopi\u00eberd!',
           poweredBy:         'Aangedreven door',
           searchPlaceholder: 'Zoek calculators\u2026',
@@ -1078,18 +1228,88 @@
         },
       ];
 
+      // ---- Per-calculator field definitions (for checklist) ----
+      // linkId values come from the local FHIR Questionnaire resources.
+      // The last item in each array is the calculated score — excluded from checklist.
+      const CALCULATOR_FIELDS = {
+        chadsvasc: [
+          { linkId: '019d12b3-87c2-7dda-9973-dd83c286c5e9', labels: ['Leeftijd'] },
+          { linkId: '019d12b3-87c2-7dda-9973-eeda5399cefe', labels: ['Geslacht'] },
+          { linkId: '019d12b3-87c2-7dda-9973-fccbc530555d', labels: ['Voorgeschiedenis van hartfalen (CHF)', 'Hartfalen'] },
+          { linkId: '019d12b3-87c2-7dda-9974-0f72342b28d9', labels: ['Voorgeschiedenis van hypertensie', 'Hypertensie'] },
+          { linkId: '019d12b3-87c2-7dda-9974-182d496a3796', labels: ['Voorgeschiedenis van beroerte/TIA/trombo-embolie', 'Beroerte / TIA'] },
+          { linkId: '019d12b3-87c2-7dda-9974-28017084dbd2', labels: ['Voorgeschiedenis van vaatziekte (MI, PAD of aortaplaque)', 'Vaatziekte'] },
+          { linkId: '019d12b3-87c2-7dda-9974-3a768b8d2690', labels: ['Voorgeschiedenis van diabetes', 'Diabetes'] },
+        ],
+        euroscore2: [
+          { linkId: '019cfab4-f257-799c-9df2-257a2358dd42', label: 'Leeftijd' },
+          { linkId: '019cfab4-f257-799c-9df2-37528cfe2ff0', label: 'Geslacht' },
+          { linkId: '019cfab4-f257-799c-9df2-43f960ae27ea', label: 'Insuline-afhankelijke diabetes' },
+          { linkId: '019cfab4-f257-799c-9df2-507647e5b2b6', label: 'COPD' },
+          { linkId: '019cfab4-f257-799c-9df2-67c2465b8ba3', label: 'Verminderde mobiliteit' },
+          { linkId: '019cfab4-f257-799c-9df2-93c11b2d4a14', label: 'Nierfunctie categorie' },
+          { linkId: '019cfab4-f257-799c-9df2-a35cffcfb233', label: 'Kritieke toestand' },
+          { linkId: '019cfab4-f257-799c-9df2-b49604d154e7', label: 'NYHA class' },
+          { linkId: '019cfab4-f257-799c-9df2-c27a30983a24', label: 'Angor CCS4' },
+          { linkId: '019cfab4-f257-799c-9df2-d2adc7285ad9', label: 'Extracardiale arteriopathie' },
+          { linkId: '019cfab4-f257-799c-9df2-e25f6e7b89ca', label: 'Voorafgaande hartoperatie' },
+          { linkId: '019cfab4-f257-799c-9df2-f703c71ff24f', label: 'Actieve endocarditis' },
+          { linkId: '019cfab4-f257-799c-9df3-14e223f8af82', label: 'LVEF categorie' },
+          { linkId: '019cfab4-f257-799c-9df3-26d3767c5bf9', label: 'Recent myocardinfarct' },
+          { linkId: '019cfab4-f257-799c-9df3-47e2c5c6d6eb', label: 'Urgentie' },
+          { linkId: '019cfab4-f257-799c-9df3-559b6e3e6bed', label: 'Aantal procedures' },
+          { linkId: '019cfab4-f257-799c-9df3-669be3e2833b', label: 'Chirurgie aan thoracale aorta' },
+        ],
+        hasbled: [
+          { linkId: '019d12c9-d7b5-7cc8-80a5-80a9ba9aab18', label: 'Hypertensie' },
+          { linkId: '019d12c9-d7b5-7cc8-80a5-95ec86411aec', label: 'Abnormale nierfunctie' },
+          { linkId: '019d12c9-d7b5-7cc8-80a5-a7ebfab592cf', label: 'Abnormale leverfunctie' },
+          { linkId: '019d12c9-d7b5-7cc8-80a5-b3a6d984a651', label: 'Voorgeschiedenis van beroerte' },
+          { linkId: '019d12c9-d7b5-7cc8-80a5-c26ac387dd05', label: 'Eerdere ernstige bloeding' },
+          { linkId: '019d12c9-d7b5-7cc8-80a5-d1247237d95e', label: 'Labiele INR' },
+          { linkId: '019d12c9-d7b5-7cc8-80a5-e5820d06bb21', label: 'Leeftijd >65' },
+          { linkId: '019d12c9-d7b5-7cc8-80a5-f190c8a408f0', label: 'Bloedingsbevorderende medicatie' },
+          { linkId: '019d12c9-d7b5-7cc8-80a6-054ddafabdb0', label: 'Alcoholgebruik' },
+        ],
+        tri: [
+          { linkId: '019d12b7-3a9c-7770-8819-a44e59c481d5', labels: ['Leeftijd ≥ 70 jaar'] },
+          { linkId: '019d12b7-3a9c-7770-8819-b3fb430f3af7', labels: ['NYHA functionele klasse III–IV', 'NYHA klasse III–IV'] },
+          { linkId: '019d12b7-3a9c-7770-8819-c66b3a451171', labels: ['Tekenen van rechtszijdig hartfalen', 'Rechtszijdig hartfalen'] },
+          { linkId: '019d12b7-3a9c-7770-8819-d60d982999fd', labels: ['Furosemide dagdosis ≥ 125 mg', 'Furosemide ≥ 125 mg/dag'] },
+          { linkId: '019d12b7-3a9c-7770-8819-e6e5ad0b2436', labels: ['GFR < 30 mL/min'] },
+          { linkId: '019d12b7-3a9c-7770-8819-f72ab2c5fe37', labels: ['Verhoogd totaal bilirubine'] },
+          { linkId: '019d12b7-3a9c-7770-881a-06d9dee1bbf5', labels: ['LVEF < 60%'] },
+          { linkId: '019d12b7-3a9c-7770-881a-17af1d0d32bc', labels: ['Matige/ernstige RV-dysfunctie'] },
+        ],
+      };
+
       // ---- Elements ----
       const form            = document.getElementById('calculator-form');
       const resultPanel     = document.getElementById('result-panel');
       const resultItems     = document.getElementById('result-items');
       const copyBtn         = document.getElementById('copy-btn');
+      const magicClipboard  = document.querySelector('tiro-magic-clipboard');
+      const magicBtn        = document.querySelector('tiro-magic-clipboard-button');
+      const clearBtn        = document.getElementById('autofill-clear-btn');
+      const autofillMeta    = document.getElementById('autofill-meta');
       const calcModal       = document.getElementById('calc-modal');
       const calcModalInput  = document.getElementById('calc-modal-input');
       const calcModalList   = document.getElementById('calc-modal-list');
-
       let currentCalcId = CALCULATORS[0].id;
+      let lastResponse  = null;  // cached for re-use
+      let previousResponse = null;
       let modalActiveIdx = 0;
       let filteredCalcs  = CALCULATORS.slice();
+      let extractionStartedAt = null;
+      let extractionTextLength = 0;
+      let extractionTimerId = null;
+      let autofillInFlight = false;
+      let autofillUsedInSession = false;
+      let lastPasteAt = null;
+      let allFieldsComplete = false;
+      let justCompletedAutofill = false;
+      const autofilledFieldIds = new Set();
+      const latestItemByLinkId = new Map();
 
       // ---- Language / i18n ----
       let currentLang = localStorage.getItem('lang') || 'en';
@@ -1105,7 +1325,8 @@
           if (t[key] !== undefined) el.textContent = t[key];
         });
         document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
-          el.placeholder = t[el.dataset.i18nPlaceholder] ?? el.placeholder;
+          const val = t[el.dataset.i18nPlaceholder];
+          if (val) el.setAttribute('placeholder', val);
         });
         document.querySelectorAll('[data-i18n-aria-label]').forEach(el => {
           el.setAttribute('aria-label', t[el.dataset.i18nAriaLabel] ?? el.getAttribute('aria-label'));
@@ -1124,11 +1345,236 @@
         document.querySelectorAll('.header__lang-btn').forEach(btn => {
           btn.classList.toggle('header__lang-btn--active', btn.dataset.lang === lang);
         });
+
+        // Update content-editable placeholder inside tiro-magic-clipboard shadow DOM
+        setMagicClipboardPlaceholder(t.autofillPlaceholder);
+      }
+
+      // Walk tiro-magic-clipboard shadow DOM to set aria-placeholder on the content editable
+      function setMagicClipboardPlaceholder(text) {
+        const mc = document.querySelector('tiro-magic-clipboard');
+        if (!mc) return;
+        function walk(root) {
+          const iter = document.createTreeWalker(root, NodeFilter.SHOW_ELEMENT);
+          let node;
+          while ((node = iter.nextNode())) {
+            if (node.classList?.contains('ContentEditable__root') ||
+                node.getAttribute('contenteditable') === 'true' ||
+                node.getAttribute('role') === 'textbox') {
+              node.setAttribute('aria-placeholder', text);
+            }
+            if (node.shadowRoot) walk(node.shadowRoot);
+          }
+        }
+        if (mc.shadowRoot) walk(mc.shadowRoot);
+        // Also walk children appended to light DOM (the content editable container)
+        walk(mc);
       }
 
       document.querySelectorAll('.header__lang-btn').forEach(btn => {
         btn.addEventListener('click', () => applyLanguage(btn.dataset.lang));
       });
+
+      // Set placeholder once SDK has mounted (React renders asynchronously)
+      setTimeout(() => setMagicClipboardPlaceholder(TRANSLATIONS[currentLang].autofillPlaceholder), 800);
+
+      function getCalculatorName() {
+        return CALCULATORS.find(c => c.id === currentCalcId)?.label || currentCalcId;
+      }
+
+      function captureEvent(name, props = {}) {
+        if (!window.posthog?.capture) return;
+        window.posthog.capture(name, props);
+      }
+
+      function getTrackedFields() {
+        return CALCULATOR_FIELDS[currentCalcId] || [];
+      }
+
+      function getMagicClipboardText() {
+        if (!magicClipboard) return '';
+        let text = '';
+        const readNode = node => {
+          if (!node || text) return;
+          if (node.classList?.contains('ContentEditable__root') ||
+              node.getAttribute?.('contenteditable') === 'true' ||
+              node.getAttribute?.('role') === 'textbox') {
+            text = (node.innerText || node.textContent || '').trim();
+          }
+        };
+        if (magicClipboard.shadowRoot) deepWalk(magicClipboard.shadowRoot, readNode);
+        if (!text) deepWalk(magicClipboard, readNode);
+        return text;
+      }
+
+      function clearMagicClipboardText() {
+        if (!magicClipboard) return;
+        const clearNode = node => {
+          if (node.classList?.contains('ContentEditable__root') ||
+              node.getAttribute?.('contenteditable') === 'true' ||
+              node.getAttribute?.('role') === 'textbox') {
+            node.innerHTML = '<p><br></p>';
+          }
+        };
+        if (magicClipboard.shadowRoot) deepWalk(magicClipboard.shadowRoot, clearNode);
+        deepWalk(magicClipboard, clearNode);
+      }
+
+      function setAutofillMeta(text = '', type = '') {
+        if (!autofillMeta) return;
+        autofillMeta.textContent = text;
+        autofillMeta.classList.toggle('autofill-meta--error', type === 'error');
+      }
+
+      function clearAutofillMeta() {
+        setAutofillMeta('');
+      }
+
+      function setMagicButtonState(state = '') {
+        if (!magicBtn) return;
+        if (state) magicBtn.setAttribute('data-state', state);
+        else magicBtn.removeAttribute('data-state');
+      }
+
+      function countFilledFields(response) {
+        const fields = getTrackedFields();
+        let filled = 0;
+        fields.forEach(field => {
+          const item = findFieldItem(response, field) || latestItemByLinkId.get(field.linkId);
+          if (isAnswered(item)) filled++;
+        });
+        return { filled, total: fields.length };
+      }
+
+      function updateLatestItemsFromResponse(response) {
+        const fields = getTrackedFields();
+        fields.forEach(field => {
+          const item = findFieldItem(response, field);
+          if (item) latestItemByLinkId.set(field.linkId, item);
+        });
+      }
+
+      function getFieldEventValue(item) {
+        const a = item?.answer?.[0];
+        if (!a) return 'cleared';
+        if (a.valueCoding) return a.valueCoding.code || a.valueCoding.display || 'coding';
+        if (a.valueBoolean !== undefined) return a.valueBoolean ? 'true' : 'false';
+        if (a.valueInteger !== undefined) return String(a.valueInteger);
+        if (a.valueDecimal !== undefined) return String(a.valueDecimal);
+        if (a.valueString !== undefined) return a.valueString;
+        return 'set';
+      }
+
+      function failAutofill(errorType) {
+        if (!autofillInFlight) return;
+        autofillInFlight = false;
+        const duration = extractionStartedAt ? Date.now() - extractionStartedAt : 0;
+        if (extractionTimerId) {
+          clearTimeout(extractionTimerId);
+          extractionTimerId = null;
+        }
+        setMagicButtonState('error');
+        setTimeout(() => setMagicButtonState(''), 1800);
+        setAutofillMeta(TRANSLATIONS[currentLang].autofillError, 'error');
+        captureEvent('autofill_extraction_failed', {
+          calculator_name: getCalculatorName(),
+          error_type: errorType || 'unknown',
+          duration_ms: duration,
+        });
+      }
+
+      function startAutofillExtraction() {
+        if (autofillInFlight) return;
+        autofillActivated = true;
+        justCompletedAutofill = false;
+        extractionStartedAt = Date.now();
+        extractionTextLength = getMagicClipboardText().length;
+        autofillInFlight = true;
+        autofillUsedInSession = true;
+        setMagicButtonState('pending');
+        setAutofillMeta(TRANSLATIONS[currentLang].autofillProcessing);
+        captureEvent('autofill_extraction_started', {
+          calculator_name: getCalculatorName(),
+          text_char_length: extractionTextLength,
+        });
+        if (extractionTimerId) clearTimeout(extractionTimerId);
+        extractionTimerId = setTimeout(() => failAutofill('timeout'), 8000);
+      }
+
+      function completeAutofillExtraction(response) {
+        if (!autofillInFlight) return;
+        autofillInFlight = false;
+        justCompletedAutofill = true;
+        const duration = extractionStartedAt ? Date.now() - extractionStartedAt : 0;
+        if (extractionTimerId) {
+          clearTimeout(extractionTimerId);
+          extractionTimerId = null;
+        }
+
+        const { filled, total } = countFilledFields(response);
+        const fillRate = total ? Number((filled / total).toFixed(3)) : 0;
+        setMagicButtonState('success');
+        setTimeout(() => setMagicButtonState(''), 1200);
+        clearAutofillMeta();
+
+        autofilledFieldIds.clear();
+        getTrackedFields().forEach(field => {
+          if (isAnswered(findFieldItem(response, field))) {
+            autofilledFieldIds.add(field.linkId);
+          }
+        });
+
+        captureEvent('autofill_extraction_completed', {
+          calculator_name: getCalculatorName(),
+          fields_filled: filled,
+          fields_total: total,
+          fill_rate: fillRate,
+          duration_ms: duration,
+        });
+      }
+
+      if (magicBtn) {
+        magicBtn.addEventListener('click', startAutofillExtraction);
+        const stateObserver = new MutationObserver(() => {
+          const state = magicBtn.getAttribute('data-state');
+          if (state === 'error' && autofillInFlight) failAutofill('sdk_error');
+        });
+        stateObserver.observe(magicBtn, { attributes: true, attributeFilter: ['data-state'] });
+      }
+
+      if (magicClipboard) {
+        document.addEventListener('paste', e => {
+          const path = e.composedPath ? e.composedPath() : [];
+          const fromClipboard = path.includes(magicClipboard) || magicClipboard.contains(e.target);
+          if (!fromClipboard) return;
+          const text = e.clipboardData?.getData('text/plain') || '';
+          lastPasteAt = Date.now();
+          captureEvent('autofill_text_pasted', {
+            calculator_name: getCalculatorName(),
+            text_char_length: text.length,
+            has_existing_fill: countFilledFields(lastResponse).filled > 0,
+          });
+        }, true);
+      }
+
+      if (clearBtn) {
+        clearBtn.addEventListener('click', () => {
+          const fieldsWereFilled = countFilledFields(lastResponse).filled > 0;
+          const sincePaste = lastPasteAt ? Date.now() - lastPasteAt : 0;
+          clearMagicClipboardText();
+          clearAutofillMeta();
+          setMagicButtonState('');
+          autofilledFieldIds.clear();
+          latestItemByLinkId.clear();
+          autofillUsedInSession = false;
+          loadCalculator(currentCalcId);
+          captureEvent('autofill_text_cleared', {
+            calculator_name: getCalculatorName(),
+            fields_were_filled: fieldsWereFilled,
+            time_since_paste_ms: sincePaste,
+          });
+        });
+      }
 
       // ---- Footer year ----
       document.getElementById('footer-year').textContent = new Date().getFullYear();
@@ -1141,12 +1587,306 @@
         setTimeout(() => banner.remove(), 210);
       });
 
+      // ---- Field highlight helpers ----
+      function findItemByLinkId(items, linkId) {
+        for (const item of (items || [])) {
+          if (item.linkId === linkId) return item;
+          if (item.item) {
+            const found = findItemByLinkId(item.item, linkId);
+            if (found) return found;
+          }
+        }
+        return null;
+      }
+
+      function isAnswered(item) {
+        if (!item?.answer?.length) return false;
+        const a = item.answer[0];
+        return a.valueCoding != null || a.valueDecimal != null ||
+               a.valueInteger != null || a.valueString != null ||
+               a.valueBoolean != null;
+      }
+
+      function normalizeLabel(text) {
+        return String(text || '')
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')
+          .replace(/[^a-zA-Z0-9]+/g, ' ')
+          .trim()
+          .toLowerCase();
+      }
+
+      function getFieldLabels(field) {
+        if (Array.isArray(field.labels)) return field.labels;
+        if (Array.isArray(field.label)) return field.label;
+        return field.label ? [field.label] : [];
+      }
+
+      function findItemByLabels(items, labels) {
+        const normalizedLabels = (labels || []).map(normalizeLabel).filter(Boolean);
+        if (!normalizedLabels.length) return null;
+
+        let bestItem = null;
+        let bestScore = 0;
+
+        function visit(arr) {
+          for (const item of (arr || [])) {
+            const text = normalizeLabel(item?.text || '');
+            if (text) {
+              let score = 0;
+              for (const candidate of normalizedLabels) {
+                score = Math.max(score, getLabelMatchScore(text, candidate));
+              }
+              if (score > 0) {
+                if (item?.answer?.length) score += 15;
+                if (score > bestScore) {
+                  bestScore = score;
+                  bestItem = item;
+                }
+              }
+            }
+            if (item?.item) visit(item.item);
+          }
+        }
+
+        visit(items);
+        return bestScore >= 35 ? bestItem : null;
+      }
+
+      function findFieldItem(response, field) {
+        return findItemByLinkId(response?.item, field.linkId) ||
+               findItemByLabels(response?.item, getFieldLabels(field));
+      }
+
+      // ---- Field highlighting ----
+      // We apply inline styles directly on discovered elements so we don't depend
+      // on stylesheets reaching across shadow root boundaries.
+      const linkIdToEl = {};
+      let highlightReady    = false;
+      let autofillActivated = false;  // true once autofill button has been clicked
+
+      // Recursively walk an element tree, descending into open shadow roots.
+      // Also checks the root's own shadow root before walking light DOM children.
+      function deepWalk(root, callback) {
+        if (root.shadowRoot) deepWalk(root.shadowRoot, callback);
+        const walker = document.createTreeWalker(root, NodeFilter.SHOW_ELEMENT);
+        let node;
+        while ((node = walker.nextNode())) {
+          callback(node);
+          if (node.shadowRoot) deepWalk(node.shadowRoot, callback);
+        }
+      }
+
+      function isQuestionContainer(el) {
+        if (!el) return false;
+        if (el === form) return false;
+        return Boolean(
+          el.querySelector?.('[role="radio"], [role="checkbox"], input, select, textarea, button[aria-pressed], button[role="radio"], .tiro-content-editable-container')
+        );
+      }
+
+      function findBestQuestionContainer(startEl) {
+        if (!startEl) return null;
+        let current = startEl;
+        let best = null;
+        for (let i = 0; i < 8; i++) {
+          if (!current || current === form || current.tagName === 'TIRO-FORM-FILLER') break;
+          if (isQuestionContainer(current)) {
+            best = current;
+            if (current.childElementCount >= 2) break;
+          }
+          current = current.parentElement;
+        }
+        return best || startEl;
+      }
+
+      function getLabelMatchScore(normalizedText, normalizedLabel) {
+        if (!normalizedText || !normalizedLabel) return 0;
+        if (normalizedText === normalizedLabel) return 100;
+        if (normalizedText.includes(normalizedLabel)) return 70;
+        if (normalizedLabel.includes(normalizedText) && normalizedText.length >= 10) return 35;
+        return 0;
+      }
+
+      function discoverQuestionItems() {
+        const fields = CALCULATOR_FIELDS[currentCalcId];
+        if (!fields) return false;
+
+        const needed = new Map(
+          fields.filter(f => !linkIdToEl[f.linkId]).map(f => [f.linkId, f])
+        );
+        if (!needed.size) return true;
+
+        // Strategy 1: attribute-value match (works if SDK exposes linkId as DOM attr)
+        deepWalk(form, el => {
+          if (!needed.size) return;
+          const v = el.getAttribute?.('linkId') || el.getAttribute?.('linkid') || el.getAttribute?.('data-link-id');
+          if (v && needed.has(v)) {
+            linkIdToEl[v] = el;
+            needed.delete(v);
+            return;
+          }
+          for (const attr of (el.attributes || [])) {
+            if (needed.has(attr.value)) {
+              linkIdToEl[attr.value] = el;
+              needed.delete(attr.value);
+              break;
+            }
+          }
+        });
+
+        // Strategy 2: robust label-text match (for calculators where linkId isn't exposed in DOM)
+        if (needed.size) {
+          [...needed.values()].forEach(f => {
+            const normalizedLabels = getFieldLabels(f)
+              .map(normalizeLabel)
+              .filter(Boolean);
+            if (!normalizedLabels.length) return;
+
+            let bestEl = null;
+            let bestScore = 0;
+            deepWalk(form, el => {
+              const text = el.textContent?.trim();
+              if (!text || text.length > 260) return;
+              const normalizedText = normalizeLabel(text);
+              if (!normalizedText) return;
+
+              let score = 0;
+              normalizedLabels.forEach(label => {
+                score = Math.max(score, getLabelMatchScore(normalizedText, label));
+              });
+              if (score <= bestScore) return;
+              bestScore = score;
+              bestEl = el;
+            });
+
+            if (bestEl && bestScore >= 35) {
+              linkIdToEl[f.linkId] = findBestQuestionContainer(bestEl);
+              needed.delete(f.linkId);
+            }
+          });
+        }
+
+        const found = fields.length - needed.size;
+        if (found === 0) {
+          console.warn('[ClinIQ] highlight: no elements found yet, scheduling retries…');
+          [400, 1000, 2000, 4000].forEach(delay => setTimeout(() => {
+            if (!highlightReady) {
+              highlightReady = discoverQuestionItems();
+              if (highlightReady && lastResponse) applyFieldHighlights(lastResponse);
+            }
+          }, delay));
+        } else {
+          console.debug(`[ClinIQ] highlight: ${found}/${fields.length} elements found.`);
+        }
+        return found > 0;
+      }
+
+      // Apply or clear inline highlight styles directly on discovered elements.
+      function setEmptyStyle(el) {
+        el.style.setProperty('outline',         '2px solid #f97316', 'important');
+        el.style.setProperty('outline-offset',  '3px',               'important');
+        el.style.setProperty('border-radius',   '0.5rem',            'important');
+        el.style.setProperty('background',      'rgba(251,146,60,0.06)', 'important');
+        el.style.setProperty('transition',      'outline 0.25s, background 0.25s');
+      }
+
+      function clearStyle(el) {
+        ['outline','outline-offset','border-radius','background','transition']
+          .forEach(p => el.style.removeProperty(p));
+      }
+
+      function flashFilledStyle(el) {
+        el.style.setProperty('outline',       '2px solid #16a34a', 'important');
+        el.style.setProperty('outline-offset','3px',               'important');
+        el.style.setProperty('border-radius', '0.5rem',            'important');
+        el.style.setProperty('background',    'rgba(22,163,74,0.08)', 'important');
+        el.style.setProperty('transition',    'outline 0.6s, background 0.6s');
+        setTimeout(() => clearStyle(el), 900);
+      }
+
+      function applyFieldHighlights(response) {
+        const fields = CALCULATOR_FIELDS[currentCalcId];
+        if (!fields) return;
+
+        // Lazy discovery — retry every call until at least one element is found
+        if (!highlightReady) highlightReady = discoverQuestionItems();
+
+        let filledCount = 0;
+        fields.forEach(f => {
+          const item   = findFieldItem(response, f) || latestItemByLinkId.get(f.linkId);
+          const filled = isAnswered(item);
+          if (filled) filledCount++;
+
+          const el = linkIdToEl[f.linkId];
+          if (!el) return;
+
+          const wasEmpty = el.dataset.hlState === 'empty';
+          if (filled) {
+            if (wasEmpty) {
+              // Transition: empty → filled — brief green flash then neutral
+              delete el.dataset.hlState;
+              flashFilledStyle(el);
+            }
+          } else {
+            el.dataset.hlState = 'empty';
+            setEmptyStyle(el);
+          }
+        });
+
+        // Show badge after autofill has run, even if zero fields were filled.
+        if (autofillActivated) {
+          updateMissingBadge(fields.length - filledCount, fields.length);
+        }
+      }
+
+      function updateMissingBadge(missing, total) {
+        const badge = document.getElementById('missing-badge');
+        if (!badge) return;
+        if (missing === 0) {
+          badge.textContent   = TRANSLATIONS[currentLang].allFieldsDone;
+          badge.className     = 'missing-badge missing-badge--done';
+          badge.style.display = 'inline-flex';
+          setTimeout(() => { badge.style.display = 'none'; }, 4000);
+        } else {
+          badge.textContent   = TRANSLATIONS[currentLang].missingCount(missing);
+          badge.className     = 'missing-badge';
+          badge.style.display = 'inline-flex';
+        }
+      }
+
+      function resetHighlights() {
+        Object.entries(linkIdToEl).forEach(([, el]) => {
+          clearStyle(el);
+          delete el.dataset.hlState;
+        });
+        Object.keys(linkIdToEl).forEach(k => delete linkIdToEl[k]);
+        latestItemByLinkId.clear();
+        highlightReady    = false;
+        autofillActivated = false;
+        autofillInFlight  = false;
+        justCompletedAutofill = false;
+        allFieldsComplete = false;
+        if (extractionTimerId) {
+          clearTimeout(extractionTimerId);
+          extractionTimerId = null;
+        }
+        const badge = document.getElementById('missing-badge');
+        if (badge) badge.style.display = 'none';
+      }
+
       // ---- Load calculator ----
       function loadCalculator(id) {
         const calc = CALCULATORS.find(c => c.id === id);
         if (calc) form.setAttribute('questionnaire', calc.url);
         resultPanel.classList.remove('visible');
         resultItems.innerHTML = '';
+        copyBtn.classList.remove('results__copy--attention', 'copied');
+        clearAutofillMeta();
+        autofilledFieldIds.clear();
+        previousResponse = null;
+        lastResponse = null;
+        resetHighlights();
       }
 
       // ---- Calculator search modal ----
@@ -1329,9 +2069,39 @@
       // Apply saved language on load (after renderComboList is defined)
       applyLanguage(currentLang);
 
-      // ---- Wire tiro-update → renderResults ----
+      // ---- Wire tiro-update → renderResults + field highlights ----
       document.querySelectorAll('tiro-form-filler').forEach(ff => {
-        ff.addEventListener('tiro-update', e => renderResults(e.detail?.response));
+        ff.addEventListener('tiro-update', e => {
+          previousResponse = lastResponse;
+          lastResponse = e.detail?.response;
+          updateLatestItemsFromResponse(lastResponse);
+          if (autofillInFlight) completeAutofillExtraction(lastResponse);
+          renderResults(lastResponse);
+          // Apply highlights only after autofill has been used
+          if (autofillActivated && CALCULATOR_FIELDS[currentCalcId] && lastResponse) {
+            applyFieldHighlights(lastResponse);
+          }
+          if (autofillUsedInSession && !autofillInFlight && !justCompletedAutofill) {
+            const fields = getTrackedFields();
+            fields.forEach(field => {
+              const linkId = field.linkId;
+              const prevItem = findFieldItem(previousResponse, field);
+              const currItem = findFieldItem(lastResponse, field);
+              const prevValue = getFieldEventValue(prevItem);
+              const currValue = getFieldEventValue(currItem);
+              if (prevValue === currValue) return;
+              if (!autofilledFieldIds.has(linkId)) return;
+              clearAutofillMeta();
+              captureEvent('autofill_field_overridden', {
+                calculator_name: getCalculatorName(),
+                field_id: linkId,
+                was_autofilled: true,
+                new_value_code: currValue,
+              });
+            });
+          }
+          justCompletedAutofill = false;
+        });
       });
 
       // ---- Parse FHIR response ----
@@ -1365,6 +2135,9 @@
         const answers = collectAnswers(response?.item);
         if (!answers.length) {
           resultPanel.classList.remove('visible');
+          resultItems.innerHTML = '';
+          allFieldsComplete = false;
+          copyBtn.classList.remove('results__copy--attention');
           return;
         }
 
@@ -1391,6 +2164,23 @@
         }
 
         resultPanel.classList.add('visible');
+        if (!copyBtn.classList.contains('copied')) {
+          copyBtn.classList.add('results__copy--attention');
+        }
+
+        const { filled, total } = countFilledFields(response);
+        const nowComplete = total > 0 && filled === total;
+        if (nowComplete && !allFieldsComplete) {
+          const score = answers[answers.length - 1]?.value || '';
+          captureEvent('calculator_score_calculated', {
+            calculator_name: getCalculatorName(),
+            score,
+            used_autofill: autofillUsedInSession,
+            autofilled_fields_count: autofilledFieldIds.size,
+            manual_fields_count: Math.max(0, total - autofilledFieldIds.size),
+          });
+        }
+        allFieldsComplete = nowComplete;
       }
 
       // ---- Copy to clipboard ----
@@ -1410,6 +2200,7 @@
 
         navigator.clipboard.writeText(lines.join('\n')).then(() => {
           const originalHTML = copyBtn.innerHTML;
+          copyBtn.classList.remove('results__copy--attention');
           copyBtn.classList.add('copied');
           copyBtn.innerHTML = `
             <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -1420,6 +2211,9 @@
           setTimeout(() => {
             copyBtn.classList.remove('copied');
             copyBtn.innerHTML = originalHTML;
+            if (resultPanel.classList.contains('visible')) {
+              copyBtn.classList.add('results__copy--attention');
+            }
           }, 2000);
         });
       });
