@@ -353,31 +353,6 @@
         cursor: default;
       }
 
-      .autofill-actions {
-        margin-top: 0.65rem;
-        display: flex;
-        justify-content: flex-end;
-      }
-
-      .autofill-clear {
-        background: transparent;
-        border: none;
-        color: #64748b;
-        font-size: 0.75rem;
-        font-family: "Open Sans", sans-serif;
-        font-weight: 700;
-        letter-spacing: 0.01em;
-        cursor: pointer;
-        padding: 0.2rem 0.3rem;
-        border-radius: 0.3rem;
-        transition: color 0.15s, background 0.15s;
-      }
-
-      .autofill-clear:hover {
-        color: #1e293b;
-        background: #f1f5f9;
-      }
-
       .autofill-meta {
         margin-top: 0.4rem;
         min-height: 0;
@@ -917,6 +892,7 @@
 
         .layout {
           grid-template-columns: 1fr;
+          gap: 0.9rem;
         }
 
         .layout__left {
@@ -927,18 +903,26 @@
           gap: 0.9rem;
         }
 
+        .card {
+          border-radius: 12px;
+        }
+
         .card__bar {
           flex-direction: column;
           align-items: flex-start;
           gap: 0.5rem;
+          min-height: auto;
+          padding: 0.65rem 0.85rem;
         }
 
         .card__body {
-          padding: 0.875rem;
+          padding: 0.85rem;
         }
 
         .template-sel {
           width: 100%;
+          flex-wrap: wrap;
+          gap: 0.45rem;
         }
 
         .combobox {
@@ -946,8 +930,28 @@
           min-width: 0;
         }
 
+        .combobox__input {
+          width: 100%;
+        }
+
+        .results__header {
+          flex-direction: column;
+          align-items: stretch;
+          gap: 0.55rem;
+        }
+
+        .results__copy {
+          width: 100%;
+          min-width: 0;
+        }
+
         .result-row {
           gap: 0.5rem;
+          align-items: flex-start;
+        }
+
+        .result-row__label {
+          white-space: normal;
         }
 
         /* Prevent tooltip overflowing left edge */
@@ -1025,9 +1029,6 @@
               <tiro-magic-clipboard for="calculator-form" hide-toolbar data-i18n-placeholder="autofillPlaceholder" placeholder="Plak hier uw verslag en extraheer automatisch data voor de berekening">
                 <tiro-magic-clipboard-button data-i18n="autofillBtn">Verslag verwerken</tiro-magic-clipboard-button>
               </tiro-magic-clipboard>
-              <div class="autofill-actions">
-                <button type="button" class="autofill-clear" id="autofill-clear-btn" data-i18n="autofillClear">Wissen</button>
-              </div>
               <p class="autofill-meta" id="autofill-meta" aria-live="polite"></p>
             </div>
           </div>
@@ -1203,6 +1204,12 @@
 
       const CALCULATORS = [
         {
+          id: 'euroscore2',
+          label: 'EuroSCORE II',
+          url: 'http://templates.tiro.health/templates/3171b88fff9a4b61af84fe354a26b48b',
+          resultCount: 3
+        },
+        {
           id: 'tri',
           label: 'TRI Score',
           url: 'http://templates.tiro.health/templates/718620a797d84dd58bd2c92d395e0e90',
@@ -1213,12 +1220,6 @@
           label: 'HAS-BLED Score',
           url: 'http://templates.tiro.health/templates/71a49276146c4492a9053bfb296d0d17',
           resultCount: 5
-        },
-        {
-          id: 'euroscore2',
-          label: 'EuroSCORE II',
-          url: 'http://templates.tiro.health/templates/3171b88fff9a4b61af84fe354a26b48b',
-          resultCount: 3
         },
         {
           id: 'chadsvasc',
@@ -1242,23 +1243,25 @@
           { linkId: '019d12b3-87c2-7dda-9974-3a768b8d2690', labels: ['Voorgeschiedenis van diabetes', 'Diabetes'] },
         ],
         euroscore2: [
-          { linkId: '019cfab4-f257-799c-9df2-257a2358dd42', label: 'Leeftijd' },
-          { linkId: '019cfab4-f257-799c-9df2-37528cfe2ff0', label: 'Geslacht' },
-          { linkId: '019cfab4-f257-799c-9df2-43f960ae27ea', label: 'Insuline-afhankelijke diabetes' },
-          { linkId: '019cfab4-f257-799c-9df2-507647e5b2b6', label: 'COPD' },
-          { linkId: '019cfab4-f257-799c-9df2-67c2465b8ba3', label: 'Verminderde mobiliteit' },
-          { linkId: '019cfab4-f257-799c-9df2-93c11b2d4a14', label: 'Nierfunctie categorie' },
-          { linkId: '019cfab4-f257-799c-9df2-a35cffcfb233', label: 'Kritieke toestand' },
-          { linkId: '019cfab4-f257-799c-9df2-b49604d154e7', label: 'NYHA class' },
-          { linkId: '019cfab4-f257-799c-9df2-c27a30983a24', label: 'Angor CCS4' },
-          { linkId: '019cfab4-f257-799c-9df2-d2adc7285ad9', label: 'Extracardiale arteriopathie' },
-          { linkId: '019cfab4-f257-799c-9df2-e25f6e7b89ca', label: 'Voorafgaande hartoperatie' },
-          { linkId: '019cfab4-f257-799c-9df2-f703c71ff24f', label: 'Actieve endocarditis' },
-          { linkId: '019cfab4-f257-799c-9df3-14e223f8af82', label: 'LVEF categorie' },
-          { linkId: '019cfab4-f257-799c-9df3-26d3767c5bf9', label: 'Recent myocardinfarct' },
-          { linkId: '019cfab4-f257-799c-9df3-47e2c5c6d6eb', label: 'Urgentie' },
-          { linkId: '019cfab4-f257-799c-9df3-559b6e3e6bed', label: 'Aantal procedures' },
-          { linkId: '019cfab4-f257-799c-9df3-669be3e2833b', label: 'Chirurgie aan thoracale aorta' },
+          { linkId: '019cfab4-f257-799c-9df2-257a2358dd42', labels: ['Leeftijd'] },
+          { linkId: '019cfab4-f257-799c-9df2-37528cfe2ff0', labels: ['Geslacht'] },
+          { linkId: '019cfab4-f257-799c-9df2-43f960ae27ea', labels: ['Insuline-afhankelijke diabetes'] },
+          { linkId: '019cfab4-f257-799c-9df2-507647e5b2b6', labels: ['Chronisch obstructief longlijden', 'COPD'] },
+          { linkId: '019cfab4-f257-799c-9df2-67c2465b8ba3', labels: ['Verminderde mobiliteit'] },
+          { linkId: '019cfab4-f257-799c-9df2-758d25b8cb10', labels: ['eGFR', 'EGFR'] },
+          { linkId: '019cfab4-f257-799c-9df2-93c11b2d4a14', labels: ['Onder nierdialyse', 'Nierdialyse'] },
+          { linkId: '019cfab4-f257-799c-9df2-a35cffcfb233', labels: ['Kritieke toestand'] },
+          { linkId: '019cfab4-f257-799c-9df2-b49604d154e7', labels: ['NYHA class', 'NYHA klasse'] },
+          { linkId: '019cfab4-f257-799c-9df2-c27a30983a24', labels: ['Angor CCS4'] },
+          { linkId: '019cfab4-f257-799c-9df2-d2adc7285ad9', labels: ['Extracardiale arteriopathie'] },
+          { linkId: '019cfab4-f257-799c-9df2-e25f6e7b89ca', labels: ['Heeft de patiënt reeds een hartoperatie ondergaan?', 'Voorafgaande hartoperatie'] },
+          { linkId: '019cfab4-f257-799c-9df2-f703c71ff24f', labels: ['Actieve endocarditis'] },
+          { linkId: '019cfab4-f257-799c-9df3-0462ff6403c7', labels: ['LVEF (%)', 'LVEF'] },
+          { linkId: '019cfab4-f257-799c-9df3-26d3767c5bf9', labels: ['Recent myocardinfarct'] },
+          { linkId: '019cfab4-f257-799c-9df3-3060bd1d681e', labels: ['Systolische pulmonale arteriële druk', 'Systolische pulmonale arteriele druk'] },
+          { linkId: '019cfab4-f257-799c-9df3-47e2c5c6d6eb', labels: ['Urgentie'] },
+          { linkId: '019cfab4-f257-799c-9df3-559b6e3e6bed', labels: ['Aantal procedures'] },
+          { linkId: '019cfab4-f257-799c-9df3-669be3e2833b', labels: ['Chirurgie aan thoracale aorta'] },
         ],
         hasbled: [
           { linkId: '019d12c9-d7b5-7cc8-80a5-80a9ba9aab18', label: 'Hypertensie' },
@@ -1290,7 +1293,6 @@
       const copyBtn         = document.getElementById('copy-btn');
       const magicClipboard  = document.querySelector('tiro-magic-clipboard');
       const magicBtn        = document.querySelector('tiro-magic-clipboard-button');
-      const clearBtn        = document.getElementById('autofill-clear-btn');
       const autofillMeta    = document.getElementById('autofill-meta');
       const calcModal       = document.getElementById('calc-modal');
       const calcModalInput  = document.getElementById('calc-modal-input');
@@ -1313,7 +1315,7 @@
       const latestItemByLinkId = new Map();
 
       // ---- Language / i18n ----
-      let currentLang = localStorage.getItem('lang') || 'en';
+      let currentLang = localStorage.getItem('lang') || 'nl';
 
       function applyLanguage(lang) {
         currentLang = lang;
@@ -1415,19 +1417,6 @@
         if (magicClipboard.shadowRoot) deepWalk(magicClipboard.shadowRoot, readNode);
         if (!text) deepWalk(magicClipboard, readNode);
         return text;
-      }
-
-      function clearMagicClipboardText() {
-        if (!magicClipboard) return;
-        const clearNode = node => {
-          if (node.classList?.contains('ContentEditable__root') ||
-              node.getAttribute?.('contenteditable') === 'true' ||
-              node.getAttribute?.('role') === 'textbox') {
-            node.innerHTML = '<p><br></p>';
-          }
-        };
-        if (magicClipboard.shadowRoot) deepWalk(magicClipboard.shadowRoot, clearNode);
-        deepWalk(magicClipboard, clearNode);
       }
 
       function setAutofillMeta(text = '', type = '') {
@@ -1565,25 +1554,6 @@
             has_existing_fill: countFilledFields(lastResponse).filled > 0,
           });
         }, true);
-      }
-
-      if (clearBtn) {
-        clearBtn.addEventListener('click', () => {
-          const fieldsWereFilled = countFilledFields(lastResponse).filled > 0;
-          const sincePaste = lastPasteAt ? Date.now() - lastPasteAt : 0;
-          clearMagicClipboardText();
-          clearAutofillMeta();
-          setMagicButtonState('');
-          autofilledFieldIds.clear();
-          latestItemByLinkId.clear();
-          autofillUsedInSession = false;
-          loadCalculator(currentCalcId);
-          captureEvent('autofill_text_cleared', {
-            calculator_name: getCalculatorName(),
-            fields_were_filled: fieldsWereFilled,
-            time_since_paste_ms: sincePaste,
-          });
-        });
       }
 
       // ---- Footer year ----
