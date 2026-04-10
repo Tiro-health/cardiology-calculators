@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ClinIQ</title>
+    <title>Report2Score</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -205,31 +205,25 @@
       ============================================================ */
       .main {
         flex: 1;
-        padding: 1.6rem 1.6rem 1rem;
+        padding: 2.5rem 1.6rem 2rem;
       }
 
-      .main__intro {
+      /* ============================================================
+         Hero
+      ============================================================ */
+      .hero {
         max-width: 1280px;
-        margin: 0 auto 1rem;
-        display: flex;
-        align-items: flex-end;
-        justify-content: space-between;
-        gap: 1rem;
+        margin: 0 auto 1.5rem;
+        text-align: center;
       }
 
-      .main__title {
-        font-size: 1.28rem;
+      .hero__title {
+        font-size: 1.55rem;
         font-weight: 800;
-        letter-spacing: -0.015em;
+        letter-spacing: -0.02em;
         color: #0b1f34;
+        line-height: 1.3;
       }
-
-      .main__subtitle {
-        margin-top: 0.2rem;
-        font-size: 0.82rem;
-        color: var(--text-muted);
-      }
-
 
       /* ============================================================
          Two-column grid
@@ -689,20 +683,21 @@
       }
 
       .results__copy {
-        display: inline-flex;
+        display: flex;
         align-items: center;
         justify-content: center;
-        gap: 0.4rem;
-        padding: 0.45rem 0.9rem;
-        min-width: 180px;
-        font-size: 0.74rem;
+        gap: 0.5rem;
+        width: 100%;
+        margin-top: 1.2rem;
+        padding: 0.875rem 1.25rem;
+        font-size: 0.95rem;
         font-family: "Open Sans", sans-serif;
         font-weight: 800;
         letter-spacing: 0.02em;
         color: #ffffff;
         background: linear-gradient(135deg, #2563eb, #1d4ed8);
         border: 1px solid #1e40af;
-        border-radius: 0.45rem;
+        border-radius: 0.625rem;
         cursor: pointer;
         box-shadow: 0 6px 18px rgba(37, 99, 235, 0.35);
         transition: transform 0.15s, box-shadow 0.15s, filter 0.15s;
@@ -737,6 +732,8 @@
 
       .results__copy svg {
         flex-shrink: 0;
+        width: 16px;
+        height: 16px;
       }
 
       .result-list {
@@ -876,18 +873,11 @@
       ============================================================ */
       @media (max-width: 860px) {
         .main {
-          padding: 1rem;
+          padding: 1.5rem 1rem 1.5rem;
         }
 
-        .main__intro {
-          margin-bottom: 0.8rem;
-          flex-direction: column;
-          align-items: flex-start;
-          gap: 0.25rem;
-        }
-
-        .main__title {
-          font-size: 1.08rem;
+        .hero__title {
+          font-size: 1.2rem;
         }
 
         .layout {
@@ -934,17 +924,6 @@
           width: 100%;
         }
 
-        .results__header {
-          flex-direction: column;
-          align-items: stretch;
-          gap: 0.55rem;
-        }
-
-        .results__copy {
-          width: 100%;
-          min-width: 0;
-        }
-
         .result-row {
           gap: 0.5rem;
           align-items: flex-start;
@@ -979,14 +958,14 @@
 
     <!-- ===== Header ===== -->
     <header class="header">
-      <div class="header__logo">
+      <a class="header__logo" href="https://tiro.health" target="_blank" rel="noopener noreferrer">
         <img
           src="https://cdn.prod.website-files.com/64f4979d1f21b45a5fcfe2d6/64f4a430bca35ec50ea7aff9_logo-blue.png"
           alt="Tiro Health"
         />
-      </div>
+      </a>
       <div class="header__sep"></div>
-      <span class="header__name">ClinIQ</span>
+      <span class="header__name">Report2Score</span>
       <div class="header__lang">
         <button class="header__lang-btn" data-lang="en" data-ph-capture-attribute-language="en">EN</button>
         <span class="header__lang-sep">|</span>
@@ -1006,11 +985,8 @@
 
     <!-- ===== Main ===== -->
     <main class="main">
-      <div class="main__intro">
-        <div>
-          <h1 class="main__title" data-i18n="mainTitle">Clinical Calculators</h1>
-          <p class="main__subtitle" data-i18n="mainSubtitle">Paste once, review quickly, and copy structured results with confidence.</p>
-        </div>
+      <div class="hero">
+        <h1 class="hero__title" data-i18n="heroTitle">Plak uw verslag &rarr; bereken scores onmiddellijk</h1>
       </div>
       <div class="layout">
 
@@ -1078,18 +1054,18 @@
                 <span class="card__step" data-i18n="workflowCopy">Step 3</span>
                 <span data-i18n="resultsLabel">Results</span>
               </span>
-              <button class="results__copy" id="copy-btn" type="button">
-                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-                </svg>
-                <span data-i18n-text>Copy</span>
-              </button>
             </div>
             <div class="card__body">
               <p class="results__hint results__hint--pending" data-i18n="resultsHintPending">Complete Step 2 to unlock copy to clipboard.</p>
               <p class="results__hint results__hint--ready" data-i18n="resultsHintReady">Review the selected rows, then copy to clipboard.</p>
               <div class="result-list" id="result-items"></div>
+              <button class="results__copy" id="copy-btn" type="button">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                </svg>
+                <span data-i18n-text>Copy</span>
+              </button>
             </div>
           </div>
         </div>
@@ -1099,11 +1075,9 @@
 
     <!-- ===== Footer ===== -->
     <footer class="footer">
-      🩺
+      Built by <a href="https://tiro.health" target="_blank" rel="noopener noreferrer">Tiro.health</a> — structured data for clinical workflows
       <span class="footer__dot">&middot;</span>
-      &copy; <span id="footer-year"></span> Tiro Health
-      <span class="footer__dot">&middot;</span>
-      <span data-i18n="poweredBy">Powered by</span> <a href="https://sdk.tiro.health/web">Tiro Web SDK</a>
+      &copy; <span id="footer-year"></span>
     </footer>
 
     <!-- ===== Calculator search modal ===== -->
@@ -1125,6 +1099,7 @@
         en: {
           mainTitle:         'Clinical Calculators',
           mainSubtitle:      'Paste once, review quickly, and copy structured results with confidence.',
+          heroTitle:         'Paste your report \u2192 get your scores instantly',
           workflowInput:     'Step 1',
           workflowReview:    'Step 2',
           workflowCopy:      'Step 3',
@@ -1164,6 +1139,7 @@
         nl: {
           mainTitle:         'Klinische calculators',
           mainSubtitle:      'Plak één keer, controleer snel en kopieer met vertrouwen gestructureerde resultaten.',
+          heroTitle:         'Plak uw verslag \u2192 bereken scores onmiddellijk',
           workflowInput:     'Stap 1',
           workflowReview:    'Stap 2',
           workflowCopy:      'Stap 3',
@@ -1749,7 +1725,7 @@
 
         const found = fields.length - needed.size;
         if (found === 0) {
-          console.warn('[ClinIQ] highlight: no elements found yet, scheduling retries…');
+          console.warn('[Report2Score] highlight: no elements found yet, scheduling retries…');
           [400, 1000, 2000, 4000].forEach(delay => setTimeout(() => {
             if (!highlightReady) {
               highlightReady = discoverQuestionItems();
@@ -1757,7 +1733,7 @@
             }
           }, delay));
         } else {
-          console.debug(`[ClinIQ] highlight: ${found}/${fields.length} elements found.`);
+          console.debug(`[Report2Score] highlight: ${found}/${fields.length} elements found.`);
         }
         return found > 0;
       }
