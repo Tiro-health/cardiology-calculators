@@ -13,6 +13,7 @@ Developer guide and implementation tracking for this repository.
 **Key external dependencies:**
 - `https://cdn.tiro.health/sdk/next/tiro-web-sdk.iife.js` — Tiro Web SDK (web components)
 - `https://sdc-staging.tiro.health/fhir/r5` — SDC FHIR endpoint for questionnaire rendering
+- `https://eu.i.posthog.com` — PostHog analytics (EU region, no PHI)
 - Google Fonts (Open Sans, Fira Mono)
 
 **Web components used:**
@@ -63,8 +64,21 @@ The layout is **50/50** — both columns share equal width (`grid-template-colum
 - [x] **Missing badge** — `#missing-badge` in card header shows count of unanswered fields; auto-hides when all filled
 - [x] **Calculator change resets** — `loadCalculator()` resets `highlightReady`, `autofillActivated`, clears badge
 
+### Phase 1 — PostHog Instrumentation
+
+> Note: PostHog events are wired in the existing implementation but several depend on the old state machine that was removed. Review and re-instrument if needed.
+
+- [ ] `autofill_text_pasted` — fires on paste
+- [ ] `autofill_extraction_started` — fires on button click
+- [ ] `autofill_extraction_completed` — fires on `data-state="success"`
+- [ ] `autofill_extraction_failed` — fires on `data-state="error"`
+- [ ] `autofill_field_overridden` — fires when user edits an autofilled field
+- [ ] `autofill_text_cleared` — fires on Clear
+- [ ] `calculator_score_calculated` — fires in `renderResults`
+
 ### Phase 2 — Polish
 
+- [ ] Review PostHog `fill_rate` data from real sessions
 - [ ] **Field count accuracy** — improve `countFilledChadsvascFields()` / badge using FHIR QuestionnaireResponse `item` traversal instead of result row proxy
 - [ ] **`autofill_field_overridden` field_id** — implement FHIR item diff to populate `field_id` and `new_value_code`
 - [ ] **Graceful error state** — verify SDK error surfaces as `data-state="error"` and show user-facing message
@@ -74,6 +88,22 @@ The layout is **50/50** — both columns share equal width (`grid-template-colum
 
 - [ ] Validate field coverage for HAS-BLED and TRI from real clinical letters
 - [ ] Review EuroSCORE II field list (some fields like `eGFR` decimal input may need separate handling)
+
+---
+
+## PostHog Event Schema Reference
+
+All events sent to `eu.i.posthog.com`. **No PHI — never include pasted text.**
+
+| Event | Trigger | Key properties |
+|---|---|---|
+| `autofill_text_pasted` | User pastes into magic clipboard | `calculator_name`, `text_char_length`, `has_existing_fill` |
+| `autofill_extraction_started` | Before extraction runs | `calculator_name`, `text_char_length` |
+| `autofill_extraction_completed` | `data-state="success"` | `calculator_name`, `fields_filled`, `fields_total`, `fill_rate`, `duration_ms` |
+| `autofill_extraction_failed` | `data-state="error"` | `calculator_name`, `error_type`, `duration_ms` |
+| `autofill_field_overridden` | User edits autofilled field | `calculator_name`, `field_id`, `was_autofilled`, `new_value_code` |
+| `autofill_text_cleared` | Clear action | `calculator_name`, `fields_were_filled`, `time_since_paste_ms` |
+| `calculator_score_calculated` | Score result rendered | `calculator_name`, `score`, `used_autofill`, `autofilled_fields_count`, `manual_fields_count` |
 
 ---
 

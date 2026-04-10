@@ -967,6 +967,13 @@
         }
       }
     </style>
+    <script>
+      !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init capture register register_once register_for_session unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group identify setPersonProperties setPersonPropertiesForFlags resetPersonPropertiesForFlags setGroupPropertiesForFlags resetGroupPropertiesForFlags resetGroups onFeatureFlags addFeatureFlagsHandler onSessionId getSurveys getActiveMatchingSurveys renderSurvey canRenderSurvey getNextSurveyStep".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+      posthog.init('phc_Hay5R4mHZSxd6IfGDqlTCDVEEKTV4c6yaCtkymKdvbx', {
+          api_host: 'https://eu.i.posthog.com',
+          defaults: '2026-01-30'
+      })
+    </script>
   </head>
   <body>
 
@@ -1295,10 +1302,15 @@
       let previousResponse = null;
       let modalActiveIdx = 0;
       let filteredCalcs  = CALCULATORS.slice();
+      let extractionStartedAt = null;
+      let extractionTextLength = 0;
       let extractionTimerId = null;
       let autofillInFlight = false;
       let autofillUsedInSession = false;
+      let lastPasteAt = null;
+      let allFieldsComplete = false;
       let justCompletedAutofill = false;
+      let pageViewCaptured = false;
       const autofilledFieldIds = new Set();
       const latestItemByLinkId = new Map();
 
@@ -1369,6 +1381,23 @@
       // Set placeholder once SDK has mounted (React renders asynchronously)
       setTimeout(() => setMagicClipboardPlaceholder(TRANSLATIONS[currentLang].autofillPlaceholder), 800);
 
+      function getCalculatorName() {
+        return CALCULATORS.find(c => c.id === currentCalcId)?.label || currentCalcId;
+      }
+
+      function captureEvent(name, props = {}) {
+        if (!window.posthog?.capture) return;
+        window.posthog.capture(name, props);
+      }
+
+      function capturePageView() {
+        if (pageViewCaptured) return;
+        pageViewCaptured = true;
+        captureEvent('calculator_page_viewed', {
+          calculator_name: getCalculatorName(),
+          page_path: window.location.pathname || '/',
+        });
+      }
 
       function getTrackedFields() {
         return CALCULATOR_FIELDS[currentCalcId] || [];
@@ -1438,6 +1467,7 @@
       function failAutofill(errorType) {
         if (!autofillInFlight) return;
         autofillInFlight = false;
+        const duration = extractionStartedAt ? Date.now() - extractionStartedAt : 0;
         if (extractionTimerId) {
           clearTimeout(extractionTimerId);
           extractionTimerId = null;
@@ -1445,16 +1475,27 @@
         setMagicButtonState('error');
         setTimeout(() => setMagicButtonState(''), 1800);
         setAutofillMeta(TRANSLATIONS[currentLang].autofillError, 'error');
+        captureEvent('autofill_extraction_failed', {
+          calculator_name: getCalculatorName(),
+          error_type: errorType || 'unknown',
+          duration_ms: duration,
+        });
       }
 
       function startAutofillExtraction() {
         if (autofillInFlight) return;
         autofillActivated = true;
         justCompletedAutofill = false;
+        extractionStartedAt = Date.now();
+        extractionTextLength = getMagicClipboardText().length;
         autofillInFlight = true;
         autofillUsedInSession = true;
         setMagicButtonState('pending');
         setAutofillMeta(TRANSLATIONS[currentLang].autofillProcessing);
+        captureEvent('autofill_extraction_started', {
+          calculator_name: getCalculatorName(),
+          text_char_length: extractionTextLength,
+        });
         if (extractionTimerId) clearTimeout(extractionTimerId);
         extractionTimerId = setTimeout(() => failAutofill('timeout'), 8000);
       }
@@ -1463,10 +1504,14 @@
         if (!autofillInFlight) return;
         autofillInFlight = false;
         justCompletedAutofill = true;
+        const duration = extractionStartedAt ? Date.now() - extractionStartedAt : 0;
         if (extractionTimerId) {
           clearTimeout(extractionTimerId);
           extractionTimerId = null;
         }
+
+        const { filled, total } = countFilledFields(response);
+        const fillRate = total ? Number((filled / total).toFixed(3)) : 0;
         setMagicButtonState('success');
         setTimeout(() => setMagicButtonState(''), 1200);
         clearAutofillMeta();
@@ -1478,6 +1523,13 @@
           }
         });
 
+        captureEvent('autofill_extraction_completed', {
+          calculator_name: getCalculatorName(),
+          fields_filled: filled,
+          fields_total: total,
+          fill_rate: fillRate,
+          duration_ms: duration,
+        });
       }
 
       if (magicBtn) {
@@ -1487,6 +1539,21 @@
           if (state === 'error' && autofillInFlight) failAutofill('sdk_error');
         });
         stateObserver.observe(magicBtn, { attributes: true, attributeFilter: ['data-state'] });
+      }
+
+      if (magicClipboard) {
+        document.addEventListener('paste', e => {
+          const path = e.composedPath ? e.composedPath() : [];
+          const fromClipboard = path.includes(magicClipboard) || magicClipboard.contains(e.target);
+          if (!fromClipboard) return;
+          const text = e.clipboardData?.getData('text/plain') || '';
+          lastPasteAt = Date.now();
+          captureEvent('autofill_text_pasted', {
+            calculator_name: getCalculatorName(),
+            text_char_length: text.length,
+            has_existing_fill: countFilledFields(lastResponse).filled > 0,
+          });
+        }, true);
       }
 
       // ---- Footer year ----
@@ -1779,6 +1846,7 @@
         autofillActivated = false;
         autofillInFlight  = false;
         justCompletedAutofill = false;
+        allFieldsComplete = false;
         if (extractionTimerId) {
           clearTimeout(extractionTimerId);
           extractionTimerId = null;
@@ -1982,6 +2050,7 @@
 
       // Apply saved language on load (after renderComboList is defined)
       applyLanguage(currentLang);
+      capturePageView();
 
       // ---- Wire tiro-update → renderResults + field highlights ----
       document.querySelectorAll('tiro-form-filler').forEach(ff => {
@@ -2006,6 +2075,12 @@
               if (prevValue === currValue) return;
               if (!autofilledFieldIds.has(linkId)) return;
               clearAutofillMeta();
+              captureEvent('autofill_field_overridden', {
+                calculator_name: getCalculatorName(),
+                field_id: linkId,
+                was_autofilled: true,
+                new_value_code: currValue,
+              });
             });
           }
           justCompletedAutofill = false;
@@ -2044,6 +2119,7 @@
         if (!answers.length) {
           resultPanel.classList.remove('visible');
           resultItems.innerHTML = '';
+          allFieldsComplete = false;
           copyBtn.classList.remove('results__copy--attention');
           return;
         }
@@ -2075,6 +2151,19 @@
           copyBtn.classList.add('results__copy--attention');
         }
 
+        const { filled, total } = countFilledFields(response);
+        const nowComplete = total > 0 && filled === total;
+        if (nowComplete && !allFieldsComplete) {
+          const score = answers[answers.length - 1]?.value || '';
+          captureEvent('calculator_score_calculated', {
+            calculator_name: getCalculatorName(),
+            score,
+            used_autofill: autofillUsedInSession,
+            autofilled_fields_count: autofilledFieldIds.size,
+            manual_fields_count: Math.max(0, total - autofilledFieldIds.size),
+          });
+        }
+        allFieldsComplete = nowComplete;
       }
 
       // ---- Copy to clipboard ----
@@ -2091,8 +2180,14 @@
           lines.push(`${lbl}: ${val}`);
         });
         if (lines.length <= 2) return;
+        const selectedRows = lines.length - 2;
 
         navigator.clipboard.writeText(lines.join('\n')).then(() => {
+          captureEvent('results_copied', {
+            calculator_name: getCalculatorName(),
+            selected_result_rows: selectedRows,
+            used_autofill: autofillUsedInSession,
+          });
           const originalHTML = copyBtn.innerHTML;
           copyBtn.classList.remove('results__copy--attention');
           copyBtn.classList.add('copied');
