@@ -205,7 +205,7 @@
       ============================================================ */
       .main {
         flex: 1;
-        padding: 2.5rem 1.6rem 2rem;
+        padding: 2.5rem 0 6rem;
       }
 
       /* ============================================================
@@ -275,7 +275,7 @@
       .layout__right {
         display: flex;
         flex-direction: column;
-        gap: 1rem;
+        min-width: 0;
       }
 
       /* ============================================================
@@ -621,164 +621,119 @@
       }
 
       /* ============================================================
-         Result panel
+         Sticky score bar
       ============================================================ */
-      .results {
-        opacity: 0.58;
-        transform: translateY(4px);
-        transition: opacity 0.25s ease, transform 0.25s ease;
-      }
-
-      .card--results .card__bar {
-        border-bottom-color: #dbe6f2;
-      }
-
-      .card--results .card__body {
-        padding-top: 1rem;
-      }
-
-      .results.visible {
-        opacity: 1;
-        transform: translateY(0);
-      }
-
-      .results:not(.visible) .results__copy {
-        opacity: 0.45;
-        filter: grayscale(0.15);
-        pointer-events: none;
-        animation: none;
-      }
-
-      .results__header {
-        display: flex;
+      .score-bar {
+        display: none;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        background: linear-gradient(90deg, #0b2036 0%, #0f2d49 100%);
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        box-shadow: 0 -4px 24px rgba(15, 23, 42, 0.25);
+        padding: 0.75rem 1.5rem;
         align-items: center;
-        justify-content: space-between;
-        margin-bottom: 0.625rem;
+        gap: 1.25rem;
       }
 
-      .results__label {
-        font-size: 0.66rem;
+      .score-bar.visible {
+        display: flex;
+      }
+
+      .score-bar__label {
+        font-size: 0.62rem;
         font-weight: 700;
-        color: #5b6d82;
         text-transform: uppercase;
         letter-spacing: 0.1em;
+        color: rgba(255, 255, 255, 0.4);
+        white-space: nowrap;
+        flex-shrink: 0;
       }
 
-      .results__hint {
-        font-size: 0.78rem;
-        color: #64748b;
-        margin-bottom: 0.65rem;
-      }
-
-      .results__hint--ready {
-        display: none;
-      }
-
-      .results.visible .results__hint--pending {
-        display: none;
-      }
-
-      .results.visible .results__hint--ready {
-        display: block;
-      }
-
-      .results__copy {
+      .score-bar__scores {
         display: flex;
         align-items: center;
-        justify-content: center;
-        gap: 0.5rem;
-        width: 100%;
-        margin-top: 1.2rem;
-        padding: 0.875rem 1.25rem;
-        font-size: 0.95rem;
-        font-family: "Open Sans", sans-serif;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+        flex: 1;
+      }
+
+      .score-chip {
+        display: flex;
+        align-items: baseline;
+        gap: 0.45rem;
+        background: rgba(255, 255, 255, 0.07);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 0.5rem;
+        padding: 0.35rem 0.8rem;
+      }
+
+      .score-chip__label {
+        font-size: 0.72rem;
+        color: rgba(255, 255, 255, 0.55);
+        font-weight: 500;
+      }
+
+      .score-chip__value {
+        font-size: 1.15rem;
         font-weight: 800;
+        color: #ffffff;
+        font-family: "Fira Mono", monospace;
+        letter-spacing: -0.01em;
+      }
+
+      .score-bar__copy {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        padding: 0.55rem 1.1rem;
+        font-size: 0.82rem;
+        font-family: "Open Sans", sans-serif;
+        font-weight: 700;
         letter-spacing: 0.02em;
         color: #ffffff;
         background: linear-gradient(135deg, #2563eb, #1d4ed8);
         border: 1px solid #1e40af;
-        border-radius: 0.625rem;
+        border-radius: 0.5rem;
         cursor: pointer;
-        box-shadow: 0 6px 18px rgba(37, 99, 235, 0.35);
+        box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4);
         transition: transform 0.15s, box-shadow 0.15s, filter 0.15s;
+        white-space: nowrap;
+        flex-shrink: 0;
       }
 
-      .results__copy:hover {
+      .score-bar__copy:hover {
         transform: translateY(-1px);
-        box-shadow: 0 10px 22px rgba(37, 99, 235, 0.45);
-        filter: brightness(1.03);
+        box-shadow: 0 6px 18px rgba(37, 99, 235, 0.5);
+        filter: brightness(1.06);
       }
 
-      .results__copy:active {
+      .score-bar__copy:active {
         transform: translateY(0);
       }
 
-      .results__copy--attention {
-        animation: copy-pulse 1.9s ease-in-out infinite;
-      }
-
-      @keyframes copy-pulse {
-        0%   { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.45), 0 6px 18px rgba(37, 99, 235, 0.35); }
-        65%  { box-shadow: 0 0 0 9px rgba(37, 99, 235, 0), 0 6px 18px rgba(37, 99, 235, 0.35); }
-        100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0), 0 6px 18px rgba(37, 99, 235, 0.35); }
-      }
-
-      .results__copy.copied {
-        color: #ffffff;
-        border-color: #15803d;
+      .score-bar__copy.copied {
         background: linear-gradient(135deg, #16a34a, #15803d);
-        box-shadow: 0 8px 20px rgba(21, 128, 61, 0.4);
+        border-color: #15803d;
+        box-shadow: 0 4px 14px rgba(21, 128, 61, 0.4);
       }
 
-      .results__copy svg {
+      .score-bar__copy svg {
         flex-shrink: 0;
-        width: 16px;
-        height: 16px;
-      }
-
-      .result-list {
-        display: flex;
-        flex-direction: column;
-        gap: 0.3rem;
-      }
-
-      .result-row {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 1rem;
-        padding: 0.46rem 0.7rem;
-        background: #f8fafc;
-        border-radius: 0.375rem;
-        border: 1px solid #edf1f7;
-      }
-
-      .result-row__check {
-        flex-shrink: 0;
-        margin: 0;
-        cursor: pointer;
-        accent-color: #2563eb;
         width: 13px;
         height: 13px;
       }
 
-      .result-row__label {
-        font-size: 0.775rem;
-        color: #64748b;
-        flex: 1;
-        min-width: 0;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+      @keyframes copy-pulse {
+        0%   { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.5), 0 4px 14px rgba(37, 99, 235, 0.4); }
+        65%  { box-shadow: 0 0 0 8px rgba(37, 99, 235, 0), 0 4px 14px rgba(37, 99, 235, 0.4); }
+        100% { box-shadow: 0 0 0 0 rgba(37, 99, 235, 0), 0 4px 14px rgba(37, 99, 235, 0.4); }
       }
 
-      .result-row__value {
-        font-size: 0.8rem;
-        font-weight: 600;
-        color: #0f172a;
-        font-family: "Fira Mono", monospace;
-        white-space: nowrap;
-        flex-shrink: 0;
+      .score-bar__copy.results__copy--attention {
+        animation: copy-pulse 1.9s ease-in-out infinite;
       }
 
       /* ============================================================
@@ -871,9 +826,9 @@
       /* ============================================================
          Responsive
       ============================================================ */
-      @media (max-width: 860px) {
+      @media (max-width: 1024px) {
         .main {
-          padding: 1.5rem 1rem 1.5rem;
+          padding: 1.5rem 0.75rem 1.5rem;
         }
 
         .hero__title {
@@ -882,15 +837,16 @@
 
         .layout {
           grid-template-columns: 1fr;
-          gap: 0.9rem;
+          column-gap: 0;
+          row-gap: 0.9rem;
         }
 
-        .layout__left {
-          position: static;
-        }
-
+        .hero,
+        .layout__left,
         .layout__right {
-          gap: 0.9rem;
+          grid-column: 1;
+          grid-row: auto;
+          position: static;
         }
 
         .card {
@@ -1011,7 +967,7 @@
 
         </div><!-- /layout__left -->
 
-        <!-- Right column: Step 2 + Step 3 -->
+        <!-- Right column: Step 2 — Calculator form -->
         <div class="layout__right">
           <div class="card">
             <div class="card__bar">
@@ -1046,32 +1002,22 @@
               ></tiro-form-filler>
             </div>
           </div>
-
-          <!-- Step 3: Copy results -->
-          <div class="card card--results results" id="result-panel">
-            <div class="card__bar">
-              <span class="card__bar-label">
-                <span class="card__step" data-i18n="workflowCopy">Step 3</span>
-                <span data-i18n="resultsLabel">Results</span>
-              </span>
-            </div>
-            <div class="card__body">
-              <p class="results__hint results__hint--pending" data-i18n="resultsHintPending">Complete Step 2 to unlock copy to clipboard.</p>
-              <p class="results__hint results__hint--ready" data-i18n="resultsHintReady">Review the selected rows, then copy to clipboard.</p>
-              <div class="result-list" id="result-items"></div>
-              <button class="results__copy" id="copy-btn" type="button">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                  <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-                </svg>
-                <span data-i18n-text>Copy</span>
-              </button>
-            </div>
-          </div>
-        </div>
+        </div><!-- /layout__right -->
 
       </div>
     </main>
+
+    <!-- ===== Sticky score bar ===== -->
+    <div class="score-bar" id="result-panel">
+      <div class="score-bar__scores" id="result-items"></div>
+      <button class="score-bar__copy results__copy--attention" id="copy-btn" type="button">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+        </svg>
+        <span data-i18n-text>Kopieer</span>
+      </button>
+    </div>
 
     <!-- ===== Footer ===== -->
     <footer class="footer">
@@ -1183,19 +1129,23 @@
           id: 'euroscore2',
           label: 'EuroSCORE II',
           url: 'http://templates.tiro.health/templates/3171b88fff9a4b61af84fe354a26b48b',
-          resultCount: 3
+          resultCount: 1,
+          excludeLabels: ['nierfunctie categorie', 'lvef categorie'],
+          appendPercentAll: true,
         },
         {
           id: 'tri',
           label: 'TRI Score',
           url: 'http://templates.tiro.health/templates/718620a797d84dd58bd2c92d395e0e90',
-          resultCount: 3
+          resultCount: null,
+          appendPercentLabels: ['geschatte intramurale mortaliteit'],
         },
         {
           id: 'hasbled',
           label: 'HAS-BLED Score',
           url: 'http://templates.tiro.health/templates/71a49276146c4492a9053bfb296d0d17',
-          resultCount: 5
+          resultCount: null,
+          appendPercentLabels: ['risico op ernstige bloeding'],
         },
         {
           id: 'chadsvasc',
@@ -2078,7 +2028,7 @@
         for (const item of (items || [])) {
           if (item.answer && item.answer.length > 0) {
             const values = item.answer.map(getAnswerText).filter(Boolean).join(', ');
-            if (values) out.push({ label: item.text || item.linkId, value: values });
+            if (values) out.push({ label: item.text || item.linkId, value: values, linkId: item.linkId });
           }
           if (item.item) collectAnswers(item.item, out);
         }
@@ -2090,9 +2040,32 @@
         return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
       }
 
+      function getScores(response) {
+        const allAnswers = collectAnswers(response?.item);
+        const calc = CALCULATORS.find(c => c.id === currentCalcId);
+        const inputIds = new Set((CALCULATOR_FIELDS[currentCalcId] || []).map(f => f.linkId));
+        const excludeLabels = new Set((calc?.excludeLabels || []).map(l => l.toLowerCase()));
+        const appendPercentLabels = new Set((calc?.appendPercentLabels || []).map(l => l.toLowerCase()));
+        let scores = allAnswers.filter(a =>
+          !inputIds.has(a.linkId) &&
+          !excludeLabels.has((a.label || '').toLowerCase())
+        );
+        if (calc?.resultCount) scores = scores.slice(-calc.resultCount);
+        scores = scores.map(s => {
+          const needsPercent = calc?.appendPercentAll ||
+            appendPercentLabels.has((s.label || '').toLowerCase());
+          if (needsPercent && !s.value.trim().endsWith('%')) {
+            return { ...s, value: s.value + '%' };
+          }
+          return s;
+        });
+        return scores;
+      }
+
       function renderResults(response) {
-        const answers = collectAnswers(response?.item);
-        if (!answers.length) {
+        const scores = getScores(response);
+
+        if (!scores.length) {
           resultPanel.classList.remove('visible');
           resultItems.innerHTML = '';
           allFieldsComplete = false;
@@ -2100,27 +2073,11 @@
           return;
         }
 
-        const existingRows = Array.from(resultItems.querySelectorAll('.result-row'));
-        const existingLabels = existingRows.map(r => r.querySelector('.result-row__label')?.textContent?.trim());
-        const newLabels = answers.map(a => a.label);
-        const labelsMatch = existingLabels.length === newLabels.length &&
-          newLabels.every((l, i) => l === existingLabels[i]);
-
-        if (labelsMatch) {
-          // Only update values — never touch the checkboxes
-          existingRows.forEach((row, i) => {
-            row.querySelector('.result-row__value').textContent = answers[i].value;
-          });
-        } else {
-          const calc = CALCULATORS.find(c => c.id === currentCalcId);
-          const resultStart = Math.max(0, answers.length - (calc?.resultCount ?? 1));
-          resultItems.innerHTML = answers.map(({ label, value }, i) => `
-            <div class="result-row">
-              <input type="checkbox" class="result-row__check"${i >= resultStart ? ' checked' : ''}>
-              <span class="result-row__label">${escHtml(label)}</span>
-              <span class="result-row__value">${escHtml(value)}</span>
-            </div>`).join('');
-        }
+        resultItems.innerHTML = scores.map(({ label, value }) => `
+          <div class="score-chip">
+            <span class="score-chip__label">${escHtml(label)}</span>
+            <span class="score-chip__value">${escHtml(value)}</span>
+          </div>`).join('');
 
         resultPanel.classList.add('visible');
         if (!copyBtn.classList.contains('copied')) {
@@ -2130,7 +2087,7 @@
         const { filled, total } = countFilledFields(response);
         const nowComplete = total > 0 && filled === total;
         if (nowComplete && !allFieldsComplete) {
-          const score = answers[answers.length - 1]?.value || '';
+          const score = scores[scores.length - 1]?.value || '';
           captureEvent('calculator_score_calculated', {
             calculator_name: getCalculatorName(),
             score,
@@ -2144,19 +2101,14 @@
 
       // ---- Copy to clipboard ----
       copyBtn.addEventListener('click', () => {
-        const rows = resultItems.querySelectorAll('.result-row');
-        if (!rows.length) return;
+        const scores = getScores(lastResponse);
+        if (!scores.length) return;
 
-        const calcLabel = CALCULATORS.find(c => c.id === currentCalcId)?.label || TRANSLATIONS[currentLang].resultsLabel;
+        const calc = CALCULATORS.find(c => c.id === currentCalcId);
+        const calcLabel = calc?.label || TRANSLATIONS[currentLang].resultsLabel;
         const lines = [calcLabel, ''];
-        rows.forEach(row => {
-          if (!row.querySelector('.result-row__check')?.checked) return;
-          const lbl = row.querySelector('.result-row__label')?.textContent?.trim() || '';
-          const val = row.querySelector('.result-row__value')?.textContent?.trim() || '';
-          lines.push(`${lbl}: ${val}`);
-        });
-        if (lines.length <= 2) return;
-        const selectedRows = lines.length - 2;
+        scores.forEach(({ label, value }) => lines.push(`${label}: ${value}`));
+        const selectedRows = scores.length;
 
         navigator.clipboard.writeText(lines.join('\n')).then(() => {
           captureEvent('results_copied', {
