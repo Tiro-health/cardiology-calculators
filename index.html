@@ -1137,15 +1137,15 @@
           id: 'tri',
           label: 'TRI Score',
           url: 'http://templates.tiro.health/templates/718620a797d84dd58bd2c92d395e0e90',
-          resultCount: null,
+          resultLabels: ['tri score', 'tri-score', 'risicoscore', 'geschatte intramurale mortaliteit'],
           appendPercentLabels: ['geschatte intramurale mortaliteit'],
         },
         {
           id: 'hasbled',
           label: 'HAS-BLED Score',
           url: 'http://templates.tiro.health/templates/71a49276146c4492a9053bfb296d0d17',
-          resultCount: null,
-          appendPercentLabels: ['risico op ernstige bloeding'],
+          resultLabels: ['has-bled score', 'bloedingsrisico', 'bloedingen per 100 patiëntjaren', 'aanbeveling'],
+          appendPercentLabels: ['bloedingen per 100 patiëntjaren'],
         },
         {
           id: 'chadsvasc',
@@ -2043,14 +2043,24 @@
       function getScores(response) {
         const allAnswers = collectAnswers(response?.item);
         const calc = CALCULATORS.find(c => c.id === currentCalcId);
-        const inputIds = new Set((CALCULATOR_FIELDS[currentCalcId] || []).map(f => f.linkId));
-        const excludeLabels = new Set((calc?.excludeLabels || []).map(l => l.toLowerCase()));
         const appendPercentLabels = new Set((calc?.appendPercentLabels || []).map(l => l.toLowerCase()));
-        let scores = allAnswers.filter(a =>
-          !inputIds.has(a.linkId) &&
-          !excludeLabels.has((a.label || '').toLowerCase())
-        );
-        if (calc?.resultCount) scores = scores.slice(-calc.resultCount);
+
+        let scores;
+        if (calc?.resultLabels?.length) {
+          // Whitelist: only show explicitly named output fields
+          const resultLabels = new Set(calc.resultLabels.map(l => l.toLowerCase()));
+          scores = allAnswers.filter(a => resultLabels.has((a.label || '').toLowerCase()));
+        } else {
+          // Fallback: exclude known input linkIds, then cap by resultCount
+          const inputIds = new Set((CALCULATOR_FIELDS[currentCalcId] || []).map(f => f.linkId));
+          const excludeLabels = new Set((calc?.excludeLabels || []).map(l => l.toLowerCase()));
+          scores = allAnswers.filter(a =>
+            !inputIds.has(a.linkId) &&
+            !excludeLabels.has((a.label || '').toLowerCase())
+          );
+          if (calc?.resultCount) scores = scores.slice(-calc.resultCount);
+        }
+
         scores = scores.map(s => {
           const needsPercent = calc?.appendPercentAll ||
             appendPercentLabels.has((s.label || '').toLowerCase());
