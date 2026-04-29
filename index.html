@@ -1785,6 +1785,10 @@
       function loadCalculator(id) {
         const calc = CALCULATORS.find(c => c.id === id);
         if (calc) form.setAttribute('questionnaire', calc.url);
+        window.posthog?.register?.({
+          calculator_id: id,
+          calculator_name: calc?.label || id,
+        });
         resultPanel.classList.remove('visible');
         resultItems.innerHTML = '';
         copyBtn.classList.remove('results__copy--attention', 'copied');
